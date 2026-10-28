@@ -52,7 +52,7 @@ La app funciona completa sin esto (modo local, se indica como «Solo en este dis
 3. **Autenticación**: menú **Authentication → Sign In / Providers → Email**: dejalo activado. Opcional: desactivá *Confirm email* para no depender del correo (la cuenta es solo tuya).
 4. **Copiar las credenciales públicas**: **Project Settings → API Keys** (o *Data API*): copiá la **Project URL** y la clave **publishable / anon**. ⚠️ Nunca copies ni compartas la clave *secret / service_role*.
 5. **Conectar la app** — dos opciones:
-   - **A (recomendada, se hace una vez):** pasale la URL y la clave publishable a Claude, o creá en GitHub → repo `c2-recall` → *Settings → Secrets and variables → Actions → Variables* las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` y volvé a ejecutar el workflow. Ambos dispositivos quedan configurados automáticamente.
+   - **A (recomendada, se hace una vez):** pasale la URL y la clave publishable a Claude (o ponelas vos en un archivo `.env.local` con las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`, ver `.env.example`) y volvé a publicar con `npm run deploy`. Ambos dispositivos quedan configurados automáticamente.
    - **B (por dispositivo):** en la app, **Ajustes → Cuenta y sincronización**, pegá URL y clave → *Guardar configuración*.
 6. **Crear tu cuenta**: en **Ajustes → Cuenta y sincronización** escribí email y contraseña → **Crear cuenta** (y confirmá el email si dejaste esa opción). En el otro dispositivo, **Iniciar sesión** con los mismos datos.
 7. **Cerrar registros nuevos** (recomendado): en Supabase, **Authentication → Sign In / Providers → Allow new users to sign up: off**. Solo vos podés entrar.
