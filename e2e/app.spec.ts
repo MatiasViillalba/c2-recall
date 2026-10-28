@@ -8,89 +8,87 @@ async function shot(page: Page, name: string) {
 
 async function boot(page: Page) {
   await page.goto('./');
-  await expect(page.getByRole('button', { name: /Empezar a estudiar|Todo al día/ })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole('button', { name: /Show answer|Check/ })).toBeVisible({ timeout: 30_000 });
 }
 
-test('el inicio carga el banco inicial y muestra el plan del día', async ({ page }) => {
-  await boot(page);
-  await expect(page.getByText(/Objetivo: /)).toBeVisible();
-  await expect(page.getByText('15', { exact: true }).first()).toBeVisible();
-  await shot(page, '01-dashboard');
+async function noOverflow(page: Page) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
   expect(overflow).toBeLessThanOrEqual(0);
+}
+
+test('abre directo en una tarjeta, sin secciones extra ni texto en español', async ({ page }) => {
+  await boot(page);
+  await expect(page.getByLabel('Answer').first()).toBeFocused();
+  await expect(page.getByRole('link', { name: 'Settings' })).toBeVisible();
+  for (const gone of [/Biblioteca/, /Progreso/, /Estudiar/, /Inicio/, /Again/, /Good/]) {
+    await expect(page.getByText(gone)).toHaveCount(0);
+  }
+  await shot(page, '01-front');
+  await noOverflow(page);
+  if (SHOTS) {
+    await page.emulateMedia({ colorScheme: 'dark' });
+    await page.getByRole('button', { name: 'Show answer' }).click();
+    await shot(page, '06-dark');
+  }
 });
 
-test('sesión de estudio: revelar, calificar, deshacer (teclado y botones)', async ({ page, isMobile }) => {
+test('revelar sin escribir, Next, y escribir para que corrija sola', async ({ page }) => {
   await boot(page);
-  await page.getByRole('button', { name: 'Empezar a estudiar' }).click();
-  await expect(page.getByRole('button', { name: /Mostrar respuesta/ })).toBeVisible();
-  await shot(page, '02-study-front');
-  if (isMobile) await page.getByRole('button', { name: /Mostrar respuesta/ }).click();
-  else await page.keyboard.press('Space');
-  await expect(page.getByText('Respuesta', { exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: /^Good/ })).toBeVisible();
-  await shot(page, '03-study-back');
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-  expect(overflow).toBeLessThanOrEqual(0);
-  if (isMobile) await page.getByRole('button', { name: /^Good/ }).click();
-  else await page.keyboard.press('3');
-  await expect(page.getByRole('button', { name: /Mostrar respuesta/ })).toBeVisible();
-  // Deshacer vuelve a la tarjeta anterior ya revelada
-  await page.getByRole('button', { name: /Deshacer/ }).click();
-  await expect(page.getByRole('button', { name: /^Good/ })).toBeVisible();
-  await page.getByRole('button', { name: /^Again/ }).click();
-  await expect(page.getByRole('button', { name: /Mostrar respuesta/ })).toBeVisible();
+  await page.getByRole('button', { name: 'Show answer' }).click();
+  await expect(page.getByRole('button', { name: 'Next' })).toBeVisible();
+  await shot(page, '02-back-missed');
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByRole('button', { name: 'Show answer' })).toBeVisible();
+  // Enter corrige y Enter otra vez pasa a la siguiente.
+  await page.getByLabel('Answer').first().fill('zzz');
+  await expect(page.getByRole('button', { name: 'Check' })).toBeVisible();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: 'Next' })).toBeVisible();
+  await expect(page.locator('.attempt').first()).toHaveText('zzz');
+  await shot(page, '03-back-wrong');
+  await noOverflow(page);
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('button', { name: 'Show answer' })).toBeVisible();
+  await noOverflow(page);
 });
 
-test('los datos persisten tras recargar (IndexedDB)', async ({ page }) => {
+test('aparecen los dos modos (frases y word formation)', async ({ page }) => {
   await boot(page);
-  await page.getByRole('button', { name: 'Empezar a estudiar' }).click();
-  await page.getByRole('button', { name: /Mostrar respuesta/ }).click();
-  await page.getByRole('button', { name: /^Easy/ }).click();
-  await expect(page.getByRole('button', { name: /Mostrar respuesta/ })).toBeVisible();
-  await page.goto('./#/');
-  await page.reload();
-  await expect(page.getByText(/Repasadas hoy/)).toBeVisible({ timeout: 30_000 });
-  await expect(page.getByText(/1 nuevas · 0 «Again»/)).toBeVisible();
+  const seen = new Set<string>();
+  for (let i = 0; i < 30 && seen.size < 2; i++) {
+    seen.add((await page.locator('.root-word').count()) ? 'wf' : 'phrase');
+    if (seen.has('wf') && SHOTS) await shot(page, '04-word-formation');
+    await page.getByRole('button', { name: 'Show answer' }).click();
+    await page.getByRole('button', { name: 'Next' }).click();
+  }
+  expect([...seen].sort()).toEqual(['phrase', 'wf']);
 });
 
-test('biblioteca: búsqueda y detalle de un conocimiento', async ({ page }) => {
+test('los repasos quedan guardados (IndexedDB) y la app los programa', async ({ page }) => {
   await boot(page);
-  await page.goto('./#/library');
-  await page.getByPlaceholder(/Buscar expresión/).fill('work like magic');
-  await page.getByRole('link', { name: /work like magic/ }).first().click();
-  await expect(page.getByRole('heading', { name: 'work like magic' })).toBeVisible();
-  await expect(page.getByText('had magic effects')).toBeVisible();
-  await shot(page, '04-detail');
+  await page.getByRole('button', { name: 'Show answer' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByRole('button', { name: 'Show answer' })).toBeVisible();
+  const reviews = await page.evaluate(() => new Promise<number>((resolve) => {
+    const req = indexedDB.open('c2-recall');
+    req.onsuccess = () => {
+      const tx = req.result.transaction('reviews', 'readonly');
+      const c = tx.objectStore('reviews').count();
+      c.onsuccess = () => resolve(c.result);
+    };
+  }));
+  expect(reviews).toBe(1);
 });
 
-test('importación desde JSON con vista previa', async ({ page }) => {
+test('ajustes en inglés', async ({ page }) => {
   await boot(page);
-  await page.goto('./#/add?tab=import');
-  const payload = { format: 'c2-recall/v1', items: [{ expression: 'cut corners', meaningEs: 'hacer algo de forma chapucera para ahorrar', categories: ['idiom'], examParts: ['P1'], examples: [['They {{cut corners}} on safety.', 'Escatimaron en seguridad.']] }, { expression: 'work like magic', meaningEs: 'funcionar de maravilla', wrongAnswers: ['had magic'] }] };
-  await page.getByPlaceholder(/format/).fill(JSON.stringify(payload));
-  await page.getByRole('button', { name: /Analizar/ }).click();
-  await expect(page.getByText('Nuevo', { exact: true })).toBeVisible();
-  await expect(page.getByText('Lo volviste a fallar', { exact: true })).toBeVisible();
-  await shot(page, '05-import-preview');
-  await page.getByRole('button', { name: 'Confirmar importación' }).click();
-  await expect(page.getByText('Importación completada')).toBeVisible();
-});
-
-test('estadísticas, mazos y ajustes se renderizan', async ({ page }) => {
-  await boot(page);
-  await page.goto('./#/stats');
-  await expect(page.getByRole('heading', { name: 'Estadísticas' })).toBeVisible();
-  await shot(page, '06-stats');
-  await page.goto('./#/decks');
-  await expect(page.getByText('Mis errores recurrentes')).toBeVisible();
-  await shot(page, '07-decks');
-  await page.goto('./#/settings');
-  await expect(page.getByText(/Sincronización no configurada/)).toBeVisible();
-  await page.goto('./#/coverage');
-  await expect(page.getByText(/Cobertura de tus tres PDF/)).toBeVisible();
-  await expect(page.getByText('todas contabilizadas')).toBeVisible();
-  await shot(page, '08-coverage');
+  await page.getByRole('link', { name: 'Settings' }).click();
+  await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible();
+  await expect(page.getByText('Target retention')).toBeVisible();
+  await shot(page, '05-settings');
+  await noOverflow(page);
+  await page.getByRole('link', { name: 'Back to practice' }).click();
+  await expect(page.getByRole('button', { name: /Show answer|Check/ })).toBeVisible();
 });
 
 test('manifest PWA válido e instalable', async ({ page, request }) => {
@@ -113,27 +111,12 @@ test('funciona sin conexión después de la primera visita', async ({ page, cont
   await boot(page);
   await page.evaluate(async () => { await navigator.serviceWorker.ready; });
   await page.reload();
-  await expect(page.getByRole('button', { name: /Empezar a estudiar|Todo al día/ })).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByRole('button', { name: 'Show answer' })).toBeVisible({ timeout: 30_000 });
   await context.setOffline(true);
   await page.reload();
-  await expect(page.getByRole('button', { name: /Empezar a estudiar|Todo al día/ })).toBeVisible({ timeout: 30_000 });
-  await page.getByRole('button', { name: 'Empezar a estudiar' }).click();
-  await page.getByRole('button', { name: /Mostrar respuesta/ }).click();
-  await page.getByRole('button', { name: /^Good/ }).click();
-  await expect(page.getByRole('button', { name: /Mostrar respuesta/ })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Show answer' })).toBeVisible({ timeout: 30_000 });
+  await page.getByRole('button', { name: 'Show answer' }).click();
+  await page.getByRole('button', { name: 'Next' }).click();
+  await expect(page.getByRole('button', { name: 'Show answer' })).toBeVisible();
   await context.setOffline(false);
-});
-
-test('navegación por teclado: foco visible y atajos', async ({ page, isMobile }) => {
-  test.skip(!!isMobile, 'solo escritorio');
-  await boot(page);
-  await page.keyboard.press('Tab');
-  const focused = await page.evaluate(() => document.activeElement?.tagName);
-  expect(['A', 'BUTTON']).toContain(focused);
-  await page.goto('./#/study/session?mode=scheduled');
-  await expect(page.getByRole('button', { name: /Mostrar respuesta/ })).toBeVisible();
-  await page.keyboard.press('Enter');
-  await expect(page.getByRole('button', { name: /^Hard/ })).toBeVisible();
-  await page.keyboard.press('2');
-  await expect(page.getByRole('button', { name: /Mostrar respuesta/ })).toBeVisible();
 });

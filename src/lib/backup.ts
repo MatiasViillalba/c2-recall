@@ -29,7 +29,7 @@ export interface RestoreSummary {
  */
 export async function restoreBackup(text: string, mode: 'replace' | 'merge'): Promise<RestoreSummary> {
   const parsed = JSON.parse(text) as { format?: string; data?: Record<TableName, unknown[]> };
-  if (parsed.format !== BACKUP_FORMAT || !parsed.data) throw new Error('El archivo no es una copia de seguridad de C2 Recall.');
+  if (parsed.format !== BACKUP_FORMAT || !parsed.data) throw new Error('This file is not a C2 Recall backup.');
   const data = parsed.data;
   await db.transaction('rw', TABLES.map((t) => db.table(t)), async () => {
     if (mode === 'replace') for (const t of TABLES) if (t !== 'meta') await db.table(t).clear();

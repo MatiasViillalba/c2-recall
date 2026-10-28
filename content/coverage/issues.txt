@@ -3,3 +3,4 @@ WARNING go-the-extra-mile (go-the-extra-mile:es2en:auto): [03-multiple-choice.mj
 WARNING grave-imminent-danger (grave-imminent-danger:es2en:auto): [05-masterclass-reading.mjs] El frente en español contiene palabras de la respuesta: grave.
 WARNING vulnerable-to (vulnerable-to:es2en:auto): [09-mc-vocabulary-b.mjs] El frente en español contiene palabras de la respuesta: vulnerable.
 WARNING general-well-being (general-well-being:es2en:auto): [09-mc-vocabulary-b.mjs] El frente en español contiene palabras de la respuesta: general.
+WARNING cynical, wfx-cynical: Posible duplicado por expresión normalizada «cynical».

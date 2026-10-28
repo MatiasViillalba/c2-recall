@@ -224,6 +224,6 @@ describe('copias de seguridad', () => {
 
   it('rechaza archivos que no son copias', async () => {
     freshDB();
-    await expect(restoreBackup('{"hello":1}', 'merge')).rejects.toThrow(/copia de seguridad/);
+    await expect(restoreBackup('{"hello":1}', 'merge')).rejects.toThrow(/not a C2 Recall backup/);
   });
 });

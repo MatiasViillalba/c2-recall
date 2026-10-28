@@ -256,19 +256,37 @@ export function normalizeItem(rawInput: RawItem, ctx: NormalizeContext): Normali
       alternatives: knowledge.aliases.slice(0, 4),
     });
   }
-  const clozeSource = examples.find((e) => CLOZE_RE.test(e.en));
-  CLOZE_RE.lastIndex = 0;
-  if (autoAllowed('cloze') && clozeSource) {
-    const { prompt, answers, full } = parseCloze(clozeSource.en);
-    cards.push({
-      ...base,
-      id: `${id}:cloze:auto`,
-      type: 'cloze',
-      prompt,
-      hint: clozeSource.es,
-      answer: answers.join(' … '),
-      translation: clozeSource.es,
-      explanation: full,
+  // Un cloze por cada ejemplo marcado (el primero conserva su id histórico «:cloze:auto»).
+  const clozeSources = examples.filter((e) => /\{\{.+?\}\}/.test(e.en));
+  if (autoAllowed('cloze')) {
+    clozeSources.forEach((src, i) => {
+      const { prompt, answers, full } = parseCloze(src.en);
+      cards.push({
+        ...base,
+        id: i === 0 ? `${id}:cloze:auto` : `${id}:cloze:auto${i + 1}`,
+        type: 'cloze',
+        prompt,
+        hint: src.es,
+        answer: answers.join(' … '),
+        translation: src.es,
+        explanation: full,
+      });
+    });
+  }
+  // Word Formation: cada ejemplo con un único hueco de una palabra se practica también con la raíz.
+  if (categories.includes('word_formation') && knowledge.root && !noauto.has('wf')) {
+    clozeSources.forEach((src, i) => {
+      const { prompt, answers, full } = parseCloze(src.en);
+      if (answers.length !== 1 || /\s/.test(answers[0])) return;
+      cards.push({
+        ...base,
+        id: `${id}:wf:ex${i + 1}`,
+        type: 'wf',
+        prompt,
+        root: knowledge.root!.toUpperCase(),
+        answer: answers[0],
+        explanation: full,
+      });
     });
   }
 

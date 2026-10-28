@@ -3,23 +3,21 @@
 Tu Anki personal para **Cambridge C2 Proficiency**: tarjetas de recuperación activa con repetición espaciada **FSRS**, diseño premium, instalable como app (PWA) en el iPhone y en la notebook, que funciona **sin conexión** y sincroniza entre dispositivos con un plan **gratuito** de Supabase.
 
 - **App:** https://matiasviillalba.github.io/c2-recall/
-- **Banco inicial:** 641 conocimientos y 1.401 tarjetas extraídos de tus tres PDF (ver [informe de cobertura](docs/COVERAGE.md)).
+- **Banco inicial:** 711 tarjetas de frases y 180 de word formation, extraídas de tus tres PDF (ver [informe de cobertura](docs/COVERAGE.md)).
 - **Costo de mantenimiento:** US$0 (GitHub Pages + Supabase Free, sin tarjeta de crédito).
 
 ---
 
 ## Qué hace
 
-| Área | Detalle |
-| --- | --- |
-| **Tarjetas** | 8 tipos: recuperación ES→EN, completar (cloze), contraste entre confundibles, Key Word Transformation, Word Formation, patrón gramatical, producción activa (traducir) y corregir el error. El reverso muestra la respuesta destacada, la oración completa, significado, ejemplos con traducción, regla, tus errores típicos, diferencias, familia de palabras, fuente (PDF, página, ejercicio) y audio. |
-| **FSRS** | `ts-fsrs` (FSRS‑6). Again/Hard/Good/Easy con vista previa del intervalo, pasos de aprendizaje y reaprendizaje, retención objetivo configurable, límites diarios, tarjetas hermanas enterradas (una por conocimiento y día), detección de difíciles, suspender/reiniciar, deshacer. El estado se **recalcula a partir del historial** (event sourcing): editar el texto nunca toca la programación. |
-| **Repaso intensivo** | Errores, difíciles, favoritas o selección libre: se registran aparte y **no alteran FSRS**. |
-| **Biblioteca** | Búsqueda, filtros (parte, categoría, fuente, dificultad, estado, errores, favoritas, pendientes, reportadas), orden, detalle con historial, editar, agregar tarjetas, archivar/restaurar, dominado/difícil, fusionar duplicados (conserva tarjetas e historial), «Lo volví a fallar». |
-| **Mazos** | Filtros combinables (una tarjeta puede estar en varios mazos sin duplicarse): KWT, Open Cloze, MC, WF, phrasal verbs, idioms, collocations, fixed phrases, grammar, confusing words, errores recurrentes, Masterclass… y los tuyos (p. ej. «Mock Exam 3»). |
-| **Estadísticas** | Repasos por día, retención real, recuerdo estimado, racha, estados (nuevas/aprendiendo/jóvenes/maduras/reaprendiendo), pronóstico 30 días, heatmap, progreso por parte y categoría, más difíciles, errores recurrentes, evolución mensual. |
-| **Importación** | JSON `c2-recall/v1` o CSV con vista previa: detecta nuevos, existentes y recurrencias; nunca duplica ni reinicia el historial. Bandeja de importación con token (integración directa). |
-| **Datos** | IndexedDB local (offline), sincronización opcional con Supabase (RLS), exportación JSON completa y CSV, restauración (combinar o reemplazar). |
+Una sola pantalla de práctica, en inglés y sin distracciones. Abrís la app y aparece una tarjeta; escribís en el hueco, la app corrige sola y tocás **Next**. Nada de calificar con Again/Good: la nota sale de tu respuesta (bien = Good, un error de tipeo = Hard, mal o «Show answer» = Again) y FSRS (`ts-fsrs`) programa la repetición espaciada por detrás. La práctica es ilimitada: primero lo vencido, después lo nuevo y, si estás al día, lo que vence antes.
+
+| Modo | Qué ves | Reverso |
+| --- | --- | --- |
+| **Phrases** | Oración breve con un hueco para el chunk, collocation, phrasal verb, idiom, fixed phrase o estructura (Open Cloze, Multiple Choice y gramática). Los KWT muestran además la oración original y la keyword. | La oración completa con la respuesta resaltada. |
+| **Word formation** | Oración con un hueco y la raíz en mayúsculas (como en Part 3). | La oración completa con la palabra resaltada. |
+
+Los modos se alternan al azar (a veces seguidos, a veces mezclados). **Settings**: tema, retención objetivo, sincronización, copia de seguridad y mantenimiento.
 
 ---
 
@@ -38,8 +36,8 @@ Tu Anki personal para **Cambridge C2 Proficiency**: tarjetas de recuperación ac
 
 > Las actualizaciones llegan solas: cuando hay una versión nueva, la app muestra «Hay una nueva versión» → **Actualizar**. Tus datos no se tocan.
 
-### Atajos de teclado (estudio)
-`Espacio`/`Enter` mostrar respuesta (y luego = Good) · `1`–`4` calificar · `H` pista · `P` audio · `Z` deshacer · `E` editar · `F` favorita · `T` escribir la respuesta · `Esc` salir.
+### Teclado
+`Enter` corrige y `Enter` otra vez pasa a la siguiente. En los huecos dobles («see … as»), `Enter` salta al segundo hueco.
 
 ---
 
@@ -53,10 +51,10 @@ La app funciona completa sin esto (modo local, se indica como «Solo en este dis
 4. **Copiar las credenciales públicas**: **Project Settings → API Keys** (o *Data API*): copiá la **Project URL** y la clave **publishable / anon**. ⚠️ Nunca copies ni compartas la clave *secret / service_role*.
 5. **Conectar la app** — dos opciones:
    - **A (recomendada, se hace una vez):** pasale la URL y la clave publishable a Claude (o ponelas vos en un archivo `.env.local` con las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY`, ver `.env.example`) y volvé a publicar con `npm run deploy`. Ambos dispositivos quedan configurados automáticamente.
-   - **B (por dispositivo):** en la app, **Ajustes → Cuenta y sincronización**, pegá URL y clave → *Guardar configuración*.
-6. **Crear tu cuenta**: en **Ajustes → Cuenta y sincronización** escribí email y contraseña → **Crear cuenta** (y confirmá el email si dejaste esa opción). En el otro dispositivo, **Iniciar sesión** con los mismos datos.
+   - **B (por dispositivo):** en la app, **Settings → Sync**, pegá URL y clave → *Save*.
+6. **Crear tu cuenta**: en **Settings → Sync** escribí email y contraseña → **Create account** (y confirmá el email si dejaste esa opción). En el otro dispositivo, **Sign in** con los mismos datos.
 7. **Cerrar registros nuevos** (recomendado): en Supabase, **Authentication → Sign In / Providers → Allow new users to sign up: off**. Solo vos podés entrar.
-8. **Comprobar**: repasá una tarjeta en la notebook → en el iPhone abrí la app (o tocá el ícono de nube) → en *Estadísticas* aparece el repaso y la tarjeta tiene la misma próxima fecha.
+8. **Comprobar**: repasá una tarjeta en la notebook → en el iPhone abrí la app (o tocá el ícono de nube) → la tarjeta que repasaste no vuelve a aparecer hasta su próxima fecha.
 
 **Cómo funciona:** cada cambio se guarda primero en el dispositivo (IndexedDB) y se encola. Con conexión, la app sube la cola y baja lo nuevo cada pocos segundos, al volver a la app y al recuperar internet. Los repasos son eventos con id único (enviar dos veces no duplica) y el estado FSRS se recalcula reproduciendo todos los eventos en orden, así que dos dispositivos que estudiaron offline convergen al mismo resultado. Las ediciones usan «la última gana».
 
@@ -64,32 +62,14 @@ La app funciona completa sin esto (modo local, se indica como «Solo en este dis
 
 ---
 
-## Agregar conocimientos nuevos (mocks, ejercicios, clases)
+## Agregar contenido nuevo (mocks, ejercicios, clases)
 
-### Método 1 — con Claude, sin configuración
-1. En la app: **Agregar → Con Claude → Copiar instrucciones para Claude**.
-2. En una conversación con Claude: pegá las instrucciones y adjuntá capturas, PDF o el texto de tus correcciones.
-3. Claude devuelve un JSON `c2-recall/v1`. Copialo.
-4. **Agregar → Importar** → pegalo → **Analizar y previsualizar**: vas a ver *Nuevo*, *Se completa* (ya existía: se agregan fuentes/ejemplos/tarjetas) y *Lo volviste a fallar* (sube la prioridad y, si querés, cuenta como «Again» para que FSRS lo reprograme).
-5. **Confirmar importación**. Nada se duplica y nada pierde su historial.
-
-Formato completo: [`docs/IMPORT_FORMAT.md`](docs/IMPORT_FORMAT.md) · JSON Schema: [`docs/import.schema.json`](docs/import.schema.json) · también se acepta CSV.
-
-### Método 2 — integración directa (opcional)
-Con la sincronización activa: **Ajustes → Integración directa → Crear token de importación**. Una herramienta autorizada (por ejemplo Claude Code en tu notebook, si le das el token) puede dejar un lote en tu bandeja:
-
-```bash
-curl -X POST "$SUPABASE_URL/rest/v1/rpc/submit_import" \
-  -H "apikey: $SUPABASE_PUBLISHABLE_KEY" -H "Content-Type: application/json" \
-  -d '{"token":"c2r_…","title":"Mock 3","payload":{"format":"c2-recall/v1","items":[…]}}'
-```
-
-El lote queda en **Agregar → Bandeja** hasta que lo revisás y confirmás. El token se guarda solo como hash (SHA‑256), se puede revocar y tiene límite de tamaño y frecuencia. Una conversación normal de Claude **no** tiene acceso permanente a tu base de datos.
+La app ya no tiene pantalla de importación (para que quede simple). Para sumar contenido, pasale a Claude Code en esta carpeta tus capturas, PDF o correcciones: agrega los ítems en `content/seed-src/` (formato en [`docs/IMPORT_FORMAT.md`](docs/IMPORT_FORMAT.md)) y publica con `npm run deploy`. Al abrir la app, las tarjetas nuevas se suman solas, sin tocar tu historial.
 
 ---
 
 ## Copias de seguridad
-**Ajustes → Copias de seguridad → Exportar todo (JSON)** descarga conocimientos, tarjetas, estados, historial completo, mazos, fuentes y ajustes. Restaurar: *Combinar* (conserva lo más reciente de cada registro y une historiales) o *Reemplazar todo*. También hay CSV de conocimientos, tarjetas y repasos.
+**Settings → Backup → Download backup** descarga tarjetas, estados, historial completo y ajustes. **Restore backup** combina la copia con lo que hay (conserva lo más reciente de cada registro y une historiales).
 
 ---
 

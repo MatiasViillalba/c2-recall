@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-28T18:00:06.533Z",
-  "seedVersion": "9f95e7f99926",
+  "generatedAt": "2026-10-28T22:03:39.431Z",
+  "seedVersion": "3452a677c380",
   "documents": [
     {
       "id": "banco",
@@ -44,10 +44,10 @@
     "capturasIdenticalToAnnexA": "153/153 imágenes idénticas byte a byte (comparación página por página)"
   },
   "sourceMentions": 1622,
-  "knowledgeItems": 641,
-  "mergedMentions": 981,
+  "knowledgeItems": 713,
+  "mergedMentions": 909,
   "mergedDuplicateIds": 0,
-  "cards": 1401,
+  "cards": 1521,
   "cardsByType": {
     "es2en": 572,
     "cloze": 620,
@@ -56,13 +56,13 @@
     "pattern": 18,
     "contrast": 31,
     "prod": 2,
-    "wf": 60
+    "wf": 180
   },
   "knowledgeByPart": {
     "P4": 87,
     "P2": 235,
     "P1": 309,
-    "P3": 58,
+    "P3": 130,
     "SPK": 19,
     "WRI": 13,
     "P5": 6,
@@ -93,7 +93,7 @@
     "tense": 7,
     "false_friend": 6,
     "academic": 13,
-    "word_formation": 53,
+    "word_formation": 125,
     "spelling": 8,
     "strategy": 7,
     "agreement": 2
@@ -372,10 +372,18 @@
       "reason": "Material de referencia, no conocimiento lingüístico memorizable."
     }
   ],
-  "nearDuplicates": [],
+  "nearDuplicates": [
+    {
+      "expr": "cynical",
+      "ids": [
+        "cynical",
+        "wfx-cynical"
+      ]
+    }
+  ],
   "issues": {
     "errors": 0,
-    "warnings": 5
+    "warnings": 6
   },
   "files": [
     {
@@ -417,6 +425,10 @@
     {
       "file": "10-strategies-extra.mjs",
       "items": 8
+    },
+    {
+      "file": "11-word-formation-practice.mjs",
+      "items": 72
     }
   ]
 }

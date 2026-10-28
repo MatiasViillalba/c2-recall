@@ -99,7 +99,7 @@ export async function initSync(): Promise<void> {
 
 export async function signIn(email: string, password: string): Promise<void> {
   const sb = await getClient();
-  if (!sb) throw new Error('La sincronización no está configurada.');
+  if (!sb) throw new Error('Sync is not set up.');
   const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) throw new Error(translateAuthError(error.message));
   setStatus({ state: 'idle', email });
@@ -108,7 +108,7 @@ export async function signIn(email: string, password: string): Promise<void> {
 
 export async function signUp(email: string, password: string): Promise<'signed-in' | 'confirm-email'> {
   const sb = await getClient();
-  if (!sb) throw new Error('La sincronización no está configurada.');
+  if (!sb) throw new Error('Sync is not set up.');
   const { data, error } = await sb.auth.signUp({ email, password });
   if (error) throw new Error(translateAuthError(error.message));
   if (data.session) {
@@ -126,12 +126,12 @@ export async function signOut(): Promise<void> {
 }
 
 function translateAuthError(msg: string): string {
-  if (/invalid login credentials/i.test(msg)) return 'Email o contraseña incorrectos.';
-  if (/email not confirmed/i.test(msg)) return 'Tenés que confirmar el email (revisá tu bandeja de entrada).';
-  if (/already registered/i.test(msg)) return 'Ese email ya tiene una cuenta: iniciá sesión.';
-  if (/password should be at least/i.test(msg)) return 'La contraseña debe tener al menos 6 caracteres.';
-  if (/signups? not allowed/i.test(msg)) return 'Los registros nuevos están desactivados en este proyecto.';
-  if (/failed to fetch|network/i.test(msg)) return 'Sin conexión con el servidor.';
+  if (/invalid login credentials/i.test(msg)) return 'Wrong email or password.';
+  if (/email not confirmed/i.test(msg)) return 'Please confirm your email first (check your inbox).';
+  if (/already registered/i.test(msg)) return 'That email already has an account: sign in instead.';
+  if (/password should be at least/i.test(msg)) return 'The password must be at least 6 characters long.';
+  if (/signups? not allowed/i.test(msg)) return 'New sign-ups are disabled for this project.';
+  if (/failed to fetch|network/i.test(msg)) return 'Cannot reach the server.';
   return msg;
 }
 
@@ -288,7 +288,7 @@ export function startAutoSync(): void {
 // ── Integración directa (Método 2) ──
 export async function createImportToken(label: string): Promise<string> {
   const sb = await getClient();
-  if (!sb) throw new Error('La sincronización no está configurada.');
+  if (!sb) throw new Error('Sync is not set up.');
   const bytes = crypto.getRandomValues(new Uint8Array(32));
   const token = `c2r_${Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')}`;
   const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(token));

@@ -1,6 +1,6 @@
 # Informe de cobertura de los tres PDF
 
-> Generado automáticamente por `npm run seed` (banco 9f95e7f99926). Cada página de los tres documentos está **referenciada por al menos un conocimiento** o **documentada con el motivo** por el que no aporta tarjetas. El script falla el informe si alguna página queda sin contabilizar.
+> Generado automáticamente por `npm run seed` (banco 3452a677c380). Cada página de los tres documentos está **referenciada por al menos un conocimiento** o **documentada con el motivo** por el que no aporta tarjetas. El script falla el informe si alguna página queda sin contabilizar.
 
 ## Resumen
 
@@ -10,10 +10,10 @@
 | Páginas procesadas | 451 de 451 (0 sin contabilizar) |
 | Imágenes revisadas visualmente | 191 (153 del Anexo A + 38 del Anexo B) |
 | Menciones de conocimientos en las fuentes | 1622 |
-| Conocimientos únicos (tras fusionar duplicados) | 641 |
-| Menciones duplicadas fusionadas | 981 |
-| Tarjetas generadas | 1401 |
-| Validación automática | 0 errores · 5 advertencias (cognados ES/EN, revisados) |
+| Conocimientos únicos (tras fusionar duplicados) | 713 |
+| Menciones duplicadas fusionadas | 909 |
+| Tarjetas generadas | 1521 |
+| Validación automática | 0 errores · 6 advertencias (cognados ES/EN, revisados) |
 
 ## Documentos
 
@@ -33,8 +33,8 @@
 | --- | --- |
 | cloze | 620 |
 | es2en | 572 |
+| wf | 180 |
 | kwt | 91 |
-| wf | 60 |
 | contrast | 31 |
 | pattern | 18 |
 | fix | 7 |
@@ -46,8 +46,8 @@
 | --- | --- |
 | P1 | 309 |
 | P2 | 235 |
+| P3 | 130 |
 | P4 | 87 |
-| P3 | 58 |
 | SPK | 19 |
 | WRI | 13 |
 | P6 | 10 |
@@ -58,11 +58,11 @@
 | Categoría | Conocimientos |
 | --- | --- |
 | collocation | 189 |
+| word_formation | 125 |
 | idiom | 76 |
 | phrasal_verb | 66 |
 | vocabulary | 66 |
 | prepositional_phrase | 59 |
-| word_formation | 53 |
 | verb_pattern | 50 |
 | fixed_phrase | 44 |
 | linking | 34 |

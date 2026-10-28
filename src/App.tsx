@@ -8,18 +8,9 @@ import { useApplyTheme, useSettings } from './lib/hooks';
 import { ensureSeed } from './lib/seed';
 import { initSync, startAutoSync } from './lib/sync';
 import { db } from './lib/db';
-import Dashboard from './pages/Dashboard';
+import Practice from './pages/Practice';
 
-const StudyHome = lazy(() => import('./pages/StudyHome'));
-const StudySession = lazy(() => import('./pages/StudySession'));
-const Library = lazy(() => import('./pages/Library'));
-const KnowledgeDetail = lazy(() => import('./pages/KnowledgeDetail'));
-const Decks = lazy(() => import('./pages/Decks'));
-const Analytics = lazy(() => import('./pages/Analytics'));
-const AddImport = lazy(() => import('./pages/AddImport'));
 const SettingsPage = lazy(() => import('./pages/Settings'));
-const More = lazy(() => import('./pages/More'));
-const Coverage = lazy(() => import('./pages/Coverage'));
 
 function Boot({ children }: { children: React.ReactNode }) {
   const [ready, setReady] = useState(false);
@@ -32,7 +23,7 @@ function Boot({ children }: { children: React.ReactNode }) {
         const count = await db.knowledge.count();
         if (!count) setFirstRun(true);
         const res = await ensureSeed();
-        if (!count && !res) throw new Error('No se pudo cargar el banco inicial. Revisá la conexión y volvé a abrir la app (solo hace falta la primera vez).');
+        if (!count && !res) throw new Error('Could not load the card bank. Check your connection and reopen the app (only needed the first time).');
         if (navigator.storage?.persist) void navigator.storage.persist();
       } catch (e) {
         if (alive) setError((e as Error).message);
@@ -48,7 +39,7 @@ function Boot({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-dvh flex-col items-center justify-center gap-4 px-6 text-center">
         <Logo />
         <p className="max-w-sm text-muted">{error}</p>
-        <Button variant="primary" onClick={() => location.reload()}>Reintentar</Button>
+        <Button variant="primary" onClick={() => location.reload()}>Try again</Button>
       </div>
     );
   }
@@ -56,7 +47,7 @@ function Boot({ children }: { children: React.ReactNode }) {
     return (
       <div className="flex min-h-dvh flex-col items-center justify-center gap-5 px-6 text-center anim-fade">
         <Logo />
-        {firstRun && <p className="max-w-xs text-sm text-muted">Preparando tu banco de tarjetas de Cambridge C2…</p>}
+        {firstRun && <p className="max-w-xs text-sm text-muted">Preparing your cards…</p>}
         <div className="h-1 w-40 overflow-hidden rounded-full bg-surface-3"><div className="skeleton h-full w-full" /></div>
       </div>
     );
@@ -74,9 +65,9 @@ function UpdatePrompt() {
   return (
     <div className="fixed inset-x-0 top-0 z-[70] flex justify-center px-4 pt-[calc(env(safe-area-inset-top)+12px)]">
       <div className="flex max-w-md items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3 text-sm shadow-lifted anim-pop">
-        <span>Hay una nueva versión de C2 Recall.</span>
-        <Button size="sm" variant="primary" onClick={() => void updateServiceWorker(true)}>Actualizar</Button>
-        <Button size="sm" variant="ghost" onClick={() => setNeedRefresh(false)}>Luego</Button>
+        <span>A new version is available.</span>
+        <Button size="sm" variant="primary" onClick={() => void updateServiceWorker(true)}>Update</Button>
+        <Button size="sm" variant="ghost" onClick={() => setNeedRefresh(false)}>Later</Button>
       </div>
     </div>
   );
@@ -90,9 +81,9 @@ function Themed({ children }: { children: React.ReactNode }) {
 
 function PageFallback() {
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-8">
-      <div className="skeleton mb-4 h-10 w-56 rounded-2xl" />
-      <div className="skeleton h-40 w-full rounded-3xl" />
+    <div className="mx-auto max-w-2xl px-4 py-8 sm:px-8">
+      <div className="skeleton mb-4 h-10 w-40 rounded-2xl" />
+      <div className="skeleton h-48 w-full rounded-3xl" />
     </div>
   );
 }
@@ -107,18 +98,9 @@ export default function App() {
             <Suspense fallback={<PageFallback />}>
               <Routes>
                 <Route element={<Layout />}>
-                  <Route index element={<Dashboard />} />
-                  <Route path="study" element={<StudyHome />} />
-                  <Route path="study/session" element={<StudySession />} />
-                  <Route path="library" element={<Library />} />
-                  <Route path="library/:id" element={<KnowledgeDetail />} />
-                  <Route path="decks" element={<Decks />} />
-                  <Route path="stats" element={<Analytics />} />
-                  <Route path="add" element={<AddImport />} />
+                  <Route index element={<Practice />} />
                   <Route path="settings" element={<SettingsPage />} />
-                  <Route path="more" element={<More />} />
-                  <Route path="coverage" element={<Coverage />} />
-                  <Route path="*" element={<Dashboard />} />
+                  <Route path="*" element={<Practice />} />
                 </Route>
               </Routes>
             </Suspense>

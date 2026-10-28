@@ -6,5 +6,7 @@ export default defineConfig({
     environment: 'node',
     include: ['tests/**/*.test.ts'],
     setupFiles: ['tests/setup.ts'],
+    // Instalar el banco completo en fake-indexeddb tarda varios segundos.
+    testTimeout: 20_000,
   },
 });

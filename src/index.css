@@ -215,3 +215,164 @@ details > summary {
 details > summary::-webkit-details-marker {
   display: none;
 }
+
+/* ── Práctica ── */
+.ambient {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(900px 520px at 50% -12%, var(--lavender-soft), transparent 70%),
+    radial-gradient(700px 480px at 110% 110%, var(--amber-soft), transparent 70%);
+  opacity: 0.9;
+}
+
+.practice-card {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--surface);
+  box-shadow: var(--shadow-lg);
+  padding: 30px 24px 34px;
+  transition: border-color 0.3s ease;
+}
+@media (min-width: 640px) {
+  .practice-card { padding: 48px 52px 52px; border-radius: 32px; }
+}
+.practice-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: linear-gradient(90deg, var(--lavender), var(--sky));
+  opacity: 0.85;
+}
+.practice-card.is-wf::before { background: linear-gradient(90deg, var(--amber), var(--coral)); }
+.practice-card.is-right { border-color: color-mix(in srgb, var(--sage) 45%, var(--line)); }
+
+.sentence {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 50, 'WONK' 0;
+  font-size: 1.375rem;
+  line-height: 1.7;
+  letter-spacing: -0.005em;
+  color: var(--ink);
+  text-wrap: pretty;
+}
+@media (min-width: 640px) {
+  .sentence { font-size: 1.75rem; line-height: 1.65; }
+}
+
+.root-word,
+.keyword {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 650;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.root-word {
+  color: var(--amber);
+  background: var(--amber-soft);
+  border-radius: 999px;
+  padding: 6px 14px;
+}
+.keyword { color: var(--ink); }
+
+.gap-wrap { white-space: nowrap; }
+.gap-wrap.is-revealed { white-space: normal; }
+.gap {
+  display: inline-grid;
+  vertical-align: baseline;
+  min-width: 4.5em;
+  max-width: 100%;
+  margin: 0 0.1em;
+}
+.gap > * { grid-area: 1 / 1; min-width: 0; }
+.gap-mirror {
+  visibility: hidden;
+  white-space: pre;
+  overflow: hidden;
+  padding: 0 0.35em;
+}
+.gap input {
+  width: 100%;
+  min-width: 0;
+  font: inherit;
+  letter-spacing: inherit;
+  color: var(--primary);
+  text-align: center;
+  background: transparent;
+  border: 0;
+  border-bottom: 2px solid var(--line-strong);
+  border-radius: 0;
+  padding: 0 0.35em;
+  outline: none;
+  caret-color: var(--lavender);
+}
+.gap input:focus { border-bottom-color: var(--lavender); }
+.is-revealed .gap {
+  position: absolute;
+  width: 1px;
+  min-width: 0;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.answer {
+  font-weight: 500;
+  color: var(--lavender);
+  background: var(--lavender-soft);
+  border-radius: 8px;
+  padding: 0.04em 0.3em;
+  margin: 0 0.05em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  animation: fade 0.3s ease both;
+}
+.answer-right { color: var(--sage); background: var(--sage-soft); }
+.answer-close { color: var(--amber); background: var(--amber-soft); }
+.attempt {
+  font-family: var(--font-sans);
+  font-size: 0.62em;
+  color: var(--coral);
+  text-decoration-thickness: 1.5px;
+  margin: 0 0.25em 0 0.1em;
+  vertical-align: 0.15em;
+}
+
+.primary-action {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 56px;
+  width: 100%;
+  border-radius: 18px;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.primary-action:active { transform: scale(0.985); }
+.primary-action.is-show {
+  color: var(--ink-2);
+  background: color-mix(in srgb, var(--surface) 70%, transparent);
+  border: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+}
+.primary-action.is-check,
+.primary-action.is-next {
+  color: var(--primary-ink);
+  background: var(--primary);
+  box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--primary) 70%, transparent);
+}
+@media (min-width: 640px) {
+  .primary-action { width: auto; min-width: 200px; padding: 0 32px; align-self: flex-end; }
+}

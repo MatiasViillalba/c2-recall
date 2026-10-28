@@ -21,8 +21,8 @@ export default defineConfig({
         id: base,
         name: 'C2 Recall',
         short_name: 'C2 Recall',
-        description: 'Tu Anki personal para Cambridge C2 Proficiency: tarjetas con repetición espaciada FSRS.',
-        lang: 'es',
+        description: 'Cambridge C2 Proficiency flashcards with spaced repetition.',
+        lang: 'en',
         dir: 'ltr',
         start_url: base,
         scope: base,
@@ -35,10 +35,6 @@ export default defineConfig({
           { src: 'icons/icon-192.png', sizes: '192x192', type: 'image/png' },
           { src: 'icons/icon-512.png', sizes: '512x512', type: 'image/png' },
           { src: 'icons/icon-maskable-512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
-        ],
-        shortcuts: [
-          { name: 'Estudiar', url: `${base}#/study`, icons: [{ src: 'icons/icon-192.png', sizes: '192x192' }] },
-          { name: 'Agregar conocimiento', url: `${base}#/add`, icons: [{ src: 'icons/icon-192.png', sizes: '192x192' }] },
         ],
       },
       workbox: {
