@@ -1,0 +1,17 @@
+node_modules/
+dist/
+dev-dist/
+test-results/
+playwright-report/
+coverage-report/
+*.log
+.env
+.env.*
+!.env.example
+.DS_Store
+Thumbs.db
+
+# Nunca subir los PDF originales ni capturas de material con derechos de autor.
+*.pdf
+*.PDF
+content/private/

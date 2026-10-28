@@ -1,0 +1,68 @@
+// Estrategias de examen y conocimientos sueltos del inventario del Archivo (§10.4).
+export default [
+{
+  id: "kwt-rules", t: "Key Word Transformation: the 8 rules", es: "reglas de la Part 4",
+  cat: ["strategy"], parts: ["P4"], noauto: ["es2en", "cloze"],
+  ex: [["Use between three and eight words, including the {{key word}}, which must not be changed.", "Usá entre tres y ocho palabras, incluida la palabra clave, que no se puede modificar."]],
+  note: "1) 3–8 palabras con la keyword · 2) la keyword no se cambia (DAWN ≠ dawned) · 3) sin contracciones · 4) una sola respuesta · 5) mismo tiempo y referencia temporal · 6) mismo sujeto · 7) no perder ni agregar información (her ≠ their; win the game tiene que estar) · 8) gramatical y natural.",
+  src: [["B", 3, "las 8 reglas"], ["A", 2, "reglas de evaluación"], ["A", 25, "checklist KWT"]], miss: 0, prio: 2,
+  cards: [
+    { k: "pattern", q: "KWT: ¿cuántas palabras podés usar y qué no podés hacer con la keyword?", a: "Entre 3 y 8 palabras contando la keyword, que no se modifica; sin contracciones (did not, no didn't)", x: "Si te dan RAN no la conviertas en RUN; si te dan DAWN no pongas dawned." },
+    { k: "pattern", q: "KWT: además del significado, ¿qué tres cosas de la oración original tenés que conservar?", a: "El tiempo verbal / referencia temporal, el sujeto y todos los referentes (posesivos, this, objetos)", x: "visitors ≠ you; her ≠ their; this tiene que aparecer (have a discussion with Phil ABOUT THIS)." },
+  ],
+},
+{
+  id: "fifteen-second-check", t: "15-second check (KWT & Open Cloze)", es: "chequeo de 15 segundos antes de responder",
+  cat: ["strategy"], parts: ["P4", "P2"], noauto: ["es2en", "cloze"],
+  ex: [["Read the whole sentence {{aloud}} with your answer: if you stumble, it is wrong.", "Leé toda la oración en voz alta con tu respuesta: si tropezás, está mal."]],
+  note: "1) ¿Quién es el sujeto de la original? 2) ¿Qué palabra hay justo antes del hueco? 3) ¿Y justo después? (no la repitas: si ya dice THAT, no pongas rumour has it that) 4) Leé toda la oración en voz alta.",
+  src: [["B", 3, "chequeo de 15 segundos"], ["B", 4, "leer mal el hueco 2×"]], miss: 2, prio: 2,
+  cards: [{ k: "pattern", q: "¿Cuáles son los cuatro pasos del chequeo de 15 segundos?", a: "Sujeto de la original · palabra antes del hueco · palabra después del hueco · leer todo en voz alta", x: "Evita errores como repetir THAT, cambiar el sujeto o el posesivo, o escribir were finally agreed." }],
+},
+{
+  id: "open-cloze-think-in-blocks", t: "Open Cloze: think in blocks, not single words", es: "pensar en bloques fijos",
+  cat: ["strategy"], parts: ["P2"], noauto: ["es2en", "cloze"],
+  ex: [["by ___ of → {{way}}; ___ the face of → in; reduced ___ rubble → to", "by ___ of → way; ___ the face of → in; reduced ___ rubble → to"]],
+  note: "La mayoría de tus errores fue elegir una palabra que «tiene sentido» en vez del bloque fijo. Mirá la palabra de antes y la de después; has/have + participio → since; coma + hueco + participio solo → having; orden raro (___ it not for, Only by… ___ we) → inversión. Tres palabras antes y después; preposición fija; forma relativa; negación; conector; inversión condicional; idiom.",
+  src: [["B", 3, "Open Cloze: pensá en bloques"], ["A", 2, "leer palabras anteriores Y posteriores"], ["A", 25, "checklist Open Cloze"]], miss: 0, prio: 2,
+  cards: [{ k: "pattern", q: "Open Cloze: si ves «has/have + participio» en la oración y el hueco introduce un momento del pasado, ¿qué palabra suele ir?", a: "SINCE", x: "Y si ves coma + hueco + participio solo (___ chosen…), suele ser HAVING." }],
+},
+{
+  id: "mc-specific-collocation", t: "Multiple Choice: choose the specific collocation", es: "elegí la collocation específica, no el sinónimo general",
+  cat: ["strategy"], parts: ["P1"], noauto: ["es2en", "cloze"],
+  ex: [["a {{major}} intersection (not principal) · forensic facilities (not environments) · suspect (not person)", "un cruce importante · instalaciones forenses · sospechoso"]],
+  note: "Fijate si la palabra se usa solo para personas (maladjusted, gullible) o para cosas (abnormal result, reciprocal gesture). Al corregir, preguntate también por qué fallan las otras tres opciones.",
+  src: [["B", 3, "Multiple Choice"], ["A", 25, "checklist MC"]], miss: 0, prio: 2,
+  cards: [{ k: "pattern", q: "Multiple Choice: ¿qué dos preguntas te hacés antes de elegir entre opciones parecidas?", a: "¿Cuál es la collocation específica del contexto? ¿La palabra se usa con personas o con cosas?", x: "major intersection / suspect / forensic facilities; maladjusted (personas) vs abnormal (resultados)." }],
+},
+{
+  id: "wf-checklist", t: "Word Formation checklist", es: "lista de control de la Part 3",
+  cat: ["strategy", "word_formation"], parts: ["P3"], noauto: ["es2en", "cloze"],
+  ex: [["Noun, adjective, adverb or verb? Negative prefix? Singular or plural? {{-able or -ible}}?", "¿Sustantivo, adjetivo, adverbio o verbo? ¿Prefijo negativo? ¿Singular o plural? ¿-able o -ible?"]],
+  note: "1) categoría que exige el hueco · 2) ¿prefijo negativo? (YET, contraste) · 3) singular/plural · 4) ortografía (-ible/-able, likelihood) · 5) collocation natural (an educated guess).",
+  src: [["A", 2, "reglas WF"], ["A", 25, "checklist WF"]], miss: 0, prio: 2,
+  cards: [{ k: "pattern", q: "Word Formation: ¿cuáles son los cinco chequeos antes de escribir la palabra?", a: "Categoría gramatical · prefijo negativo · singular/plural · ortografía · collocation", x: "Ej.: hard-working YET ___ (CHARISMA) → uncharismatic; over long ___ (DISTANT) → distances." }],
+},
+{
+  id: "shell-out-for", t: "shell out (money) for something", es: "desembolsar (mucha plata) por algo",
+  cat: ["phrasal_verb"], parts: ["P3", "P1"],
+  ex: [["Tourists have to {{shell out}} for an overpriced ticket.", "Los turistas tienen que desembolsar por una entrada carísima."]],
+  note: "Informal: pagar, normalmente a disgusto o más de lo razonable.",
+  src: [["A", 26, "SHELL OUT FOR SOMETHING"], ["I", 198, "Anexo B WF"]], miss: 0, prio: 1,
+},
+{
+  id: "in-the-blink-of-an-eye", t: "in the blink of an eye", es: "en un abrir y cerrar de ojos",
+  cat: ["idiom"], parts: ["P4"],
+  ex: [["The money was gone {{in the blink of an eye}}.", "La plata desapareció en un abrir y cerrar de ojos."]],
+  conf: ["at the drop of a hat = sin vacilar"],
+  note: "No confundir con AT THE DROP OF A HAT: lo mezclaste en el KWT HAT (*at the blink of a hat*).",
+  src: [["A", 3, "KWT HAT"], ["A", 26, "IN THE BLINK OF AN EYE"]], miss: 1, prio: 2,
+},
+{
+  id: "yet-contrast", t: "yet (= but, however) — hard-working yet uncharismatic", es: "pero / sin embargo (contraste)",
+  cat: ["linking"], parts: ["P3", "P2"],
+  ex: [["The plan was simple {{yet}} effective.", "El plan era simple pero eficaz."]],
+  note: "YET entre dos adjetivos o cláusulas = contraste. En WF es una pista para un prefijo negativo. Otro uso: I haven't finished yet = todavía no.",
+  src: [["A", 12, "conector YET"], ["I", 76, "OC Brain: and YET"], ["I", 81, "OC Spices: YET"]], miss: 0, prio: 1,
+},
+];

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://matiasviillalba.github.io/c2-recall/import.schema.json",
+  "title": "C2 Recall import (c2-recall/v1)",
+  "type": "object",
+  "required": ["items"],
+  "properties": {
+    "format": { "const": "c2-recall/v1" },
+    "batch": {
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "source": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "object", "properties": { "title": { "type": "string" }, "kind": { "enum": ["pdf", "mock", "exercise", "class", "reading", "listening", "other"] } }, "required": ["title"] }
+          ]
+        }
+      }
+    },
+    "items": { "type": "array", "items": { "$ref": "#/$defs/knowledge" } }
+  },
+  "$defs": {
+    "knowledge": {
+      "type": "object",
+      "required": ["expression", "meaningEs"],
+      "properties": {
+        "id": { "type": "string" },
+        "expression": { "type": "string", "minLength": 1 },
+        "meaningEs": { "type": "string", "minLength": 1 },
+        "promptEs": { "type": "string" },
+        "hint": { "type": "string" },
+        "categories": { "type": "array", "items": { "$ref": "#/$defs/category" } },
+        "examParts": { "type": "array", "items": { "enum": ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "LIS", "WRI", "SPK", "GEN"] } },
+        "pattern": { "type": "string" },
+        "examples": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              { "type": "array", "prefixItems": [{ "type": "string" }, { "type": "string" }], "minItems": 1 },
+              { "type": "object", "properties": { "en": { "type": "string" }, "es": { "type": "string" } }, "required": ["en"] }
+            ]
+          }
+        },
+        "wrongAnswers": { "type": "array", "items": { "type": "string" } },
+        "errorType": { "enum": ["error", "alt", "register", "unverified"] },
+        "validation": { "enum": ["validated", "pending"] },
+        "notes": { "type": "string" },
+        "confusables": { "type": "array", "items": { "type": "string" } },
+        "aliases": { "type": "array", "items": { "type": "string" } },
+        "family": { "type": "array", "items": { "type": "array", "prefixItems": [{ "type": "string" }, { "type": "string" }, { "type": "string" }], "minItems": 2 } },
+        "root": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "sources": {
+          "type": "array",
+          "items": { "type": "object", "properties": { "title": { "type": "string" }, "page": { "type": "integer" }, "exercise": { "type": "string" } }, "required": ["title"] }
+        },
+        "timesMissed": { "type": "integer", "minimum": 0 },
+        "priority": { "enum": [1, 2, 3] },
+        "noauto": { "type": "array", "items": { "enum": ["es2en", "cloze"] } },
+        "cards": { "type": "array", "items": { "$ref": "#/$defs/card" } }
+      }
+    },
+    "card": {
+      "type": "object",
+      "required": ["type", "prompt", "answer"],
+      "properties": {
+        "type": { "enum": ["es2en", "cloze", "contrast", "kwt", "wf", "pattern", "prod", "fix"] },
+        "prompt": { "type": "string" },
+        "answer": { "type": "string" },
+        "alternatives": { "type": "array", "items": { "type": "string" } },
+        "explanation": { "type": "string" },
+        "hint": { "type": "string" },
+        "original": { "type": "string" },
+        "keyword": { "type": "string" },
+        "root": { "type": "string" },
+        "pos": { "type": "string" },
+        "translation": { "type": "string" }
+      }
+    },
+    "category": {
+      "enum": ["chunk", "collocation", "phrasal_verb", "idiom", "fixed_phrase", "expression", "vocabulary", "lexical_distinction", "false_friend", "prepositional_phrase", "linking", "academic", "british", "grammar_pattern", "verb_pattern", "inversion", "conditional", "cleft", "emphasis", "passive", "causative", "relative_clause", "comparative", "reporting", "tense", "agreement", "possessive", "word_formation", "spelling", "strategy"]
+    }
+  }
+}

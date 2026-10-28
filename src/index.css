@@ -1,0 +1,217 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/fraunces';
+
+@custom-variant dark (&:where([data-theme='dark'], [data-theme='dark'] *));
+
+/* Paleta: azul profundo, lavanda suave, verde salvia y acentos cálidos sobre papel cálido. */
+:root {
+  --bg: #f7f5f0;
+  --bg-2: #efebe3;
+  --surface: #ffffff;
+  --surface-2: #f6f3ed;
+  --surface-3: #ece7de;
+  --ink: #1b2233;
+  --ink-2: #3c4558;
+  --muted: #6b7386;
+  --faint: #9aa0ad;
+  --line: #e6e1d7;
+  --line-strong: #d5cfc3;
+  --primary: #24345f;
+  --primary-ink: #ffffff;
+  --primary-soft: #e8ebf6;
+  --lavender: #7d74d0;
+  --lavender-soft: #eeecfb;
+  --sage: #5d8a68;
+  --sage-soft: #e5efe7;
+  --amber: #c9782c;
+  --amber-soft: #fbefe1;
+  --coral: #c75b4d;
+  --coral-soft: #fbe8e5;
+  --sky: #3f78a8;
+  --sky-soft: #e4eff8;
+  --shadow: 0 1px 2px rgb(27 34 51 / 0.04), 0 8px 24px -12px rgb(27 34 51 / 0.14);
+  --shadow-lg: 0 2px 4px rgb(27 34 51 / 0.04), 0 24px 48px -20px rgb(27 34 51 / 0.25);
+  color-scheme: light;
+}
+
+[data-theme='dark'] {
+  --bg: #10131b;
+  --bg-2: #141823;
+  --surface: #181c27;
+  --surface-2: #1e2331;
+  --surface-3: #262c3c;
+  --ink: #eceae4;
+  --ink-2: #c9cbd3;
+  --muted: #9aa1b2;
+  --faint: #6c7385;
+  --line: #2a3040;
+  --line-strong: #363d50;
+  --primary: #a9b8f0;
+  --primary-ink: #10131b;
+  --primary-soft: #222b45;
+  --lavender: #b1aaf3;
+  --lavender-soft: #262540;
+  --sage: #94bd9e;
+  --sage-soft: #1f2e25;
+  --amber: #e7ac68;
+  --amber-soft: #33281b;
+  --coral: #ee8f82;
+  --coral-soft: #3a2220;
+  --sky: #8dbbe3;
+  --sky-soft: #1b2a38;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.5);
+  --shadow-lg: 0 2px 4px rgb(0 0 0 / 0.3), 0 24px 48px -20px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+
+@theme inline {
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif: 'Fraunces Variable', ui-serif, Georgia, serif;
+  --color-bg: var(--bg);
+  --color-bg-2: var(--bg-2);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-primary: var(--primary);
+  --color-primary-ink: var(--primary-ink);
+  --color-primary-soft: var(--primary-soft);
+  --color-lavender: var(--lavender);
+  --color-lavender-soft: var(--lavender-soft);
+  --color-sage: var(--sage);
+  --color-sage-soft: var(--sage-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+  --color-coral: var(--coral);
+  --color-coral-soft: var(--coral-soft);
+  --color-sky: var(--sky);
+  --color-sky-soft: var(--sky-soft);
+  --shadow-soft: var(--shadow);
+  --shadow-lifted: var(--shadow-lg);
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+  background: var(--bg);
+}
+
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-feature-settings: 'cv11', 'ss01';
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overscroll-behavior-y: none;
+}
+
+#root {
+  min-height: 100dvh;
+}
+
+::selection {
+  background: var(--lavender-soft);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--lavender);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.font-display {
+  font-family: var(--font-serif);
+  font-optical-sizing: auto;
+  font-variation-settings: 'SOFT' 50, 'WONK' 0;
+  letter-spacing: -0.01em;
+}
+
+.safe-top { padding-top: env(safe-area-inset-top); }
+.safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
+.pb-nav { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+@media (min-width: 1024px) {
+  .pb-nav { padding-bottom: 32px; }
+}
+
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* Animaciones sutiles */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes pop {
+  0% { transform: scale(0.96); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+@keyframes flipIn {
+  from { opacity: 0; transform: perspective(1200px) rotateX(-8deg) translateY(10px); }
+  to { opacity: 1; transform: perspective(1200px) rotateX(0) translateY(0); }
+}
+@keyframes shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+.anim-rise { animation: rise 0.42s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-fade { animation: fade 0.3s ease both; }
+.anim-pop { animation: pop 0.28s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.anim-flip { animation: flipIn 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.stagger > * { animation: rise 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+.stagger > *:nth-child(2) { animation-delay: 0.04s; }
+.stagger > *:nth-child(3) { animation-delay: 0.08s; }
+.stagger > *:nth-child(4) { animation-delay: 0.12s; }
+.stagger > *:nth-child(5) { animation-delay: 0.16s; }
+.stagger > *:nth-child(6) { animation-delay: 0.2s; }
+.skeleton {
+  background: linear-gradient(90deg, var(--surface-2) 0%, var(--surface-3) 50%, var(--surface-2) 100%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Hueco de cloze */
+.blank {
+  display: inline-block;
+  min-width: 4.5em;
+  border-bottom: 2px solid var(--lavender);
+  margin: 0 0.15em;
+  transform: translateY(-0.1em);
+}
+
+dialog::backdrop {
+  background: rgb(16 19 27 / 0.45);
+  backdrop-filter: blur(3px);
+}
+
+input[type='range'] {
+  accent-color: var(--primary);
+}
+
+details > summary {
+  list-style: none;
+}
+details > summary::-webkit-details-marker {
+  display: none;
+}

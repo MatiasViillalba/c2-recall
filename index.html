@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>C2 Recall</title>
+    <meta name="description" content="Tu Anki personal para Cambridge C2 Proficiency: repetición espaciada FSRS, offline y sincronizada." />
+    <meta name="theme-color" content="#F7F5F0" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#11141C" media="(prefers-color-scheme: dark)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <meta name="apple-mobile-web-app-title" content="C2 Recall" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <script>
+      // Aplica el tema antes de pintar para evitar parpadeos.
+      try {
+        var t = localStorage.getItem('c2r-theme') || 'system';
+        var dark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

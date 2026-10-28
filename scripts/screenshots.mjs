@@ -1,0 +1,25 @@
+// Capturas de pantalla para revisar el diseño: node scripts/screenshots.mjs <carpeta> [light|dark] (con vite preview en el puerto 4173).
+import { chromium, devices } from '@playwright/test';
+const out = process.argv[2];
+const browser = await chromium.launch();
+const ctx = await browser.newContext({ ...devices['iPhone 15 Pro'], colorScheme: process.argv[3] || 'light' });
+const page = await ctx.newPage();
+await page.goto('http://localhost:4173/c2-recall/');
+await page.getByRole('button', { name: /Empezar a estudiar/ }).waitFor({ timeout: 30000 });
+await page.getByRole('button', { name: /Empezar a estudiar/ }).click();
+await page.getByRole('button', { name: /Mostrar respuesta/ }).click();
+await page.waitForTimeout(1200);
+await page.screenshot({ path: `${out}/m-back.png` });
+await page.getByRole('button', { name: /^Good/ }).click();
+await page.waitForTimeout(700);
+await page.screenshot({ path: `${out}/m-front2.png` });
+await page.getByRole('button', { name: /Mostrar respuesta/ }).click();
+await page.waitForTimeout(1200);
+await page.screenshot({ path: `${out}/m-back2.png` });
+await page.goto('http://localhost:4173/c2-recall/#/library');
+await page.waitForTimeout(1500);
+await page.screenshot({ path: `${out}/m-library.png` });
+await page.goto('http://localhost:4173/c2-recall/#/study');
+await page.waitForTimeout(1500);
+await page.screenshot({ path: `${out}/m-studyhome.png` });
+await browser.close();
