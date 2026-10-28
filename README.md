@@ -122,7 +122,7 @@ npx playwright install chromium && npm run test:e2e   # 17 pruebas de interfaz (
 ```
 
 ### Publicar
-Cada `git push` a `main` ejecuta `.github/workflows/deploy.yml`: instala, prueba, compila y publica en GitHub Pages (`https://<usuario>.github.io/c2-recall/`). Para servir en otra ruta: `BASE_PATH=/ npm run build`.
+`npm run deploy` prueba, compila y publica `dist/` en la rama `gh-pages`, que GitHub Pages sirve en `https://<usuario>.github.io/c2-recall/`. Si preferís despliegue automático con GitHub Actions, copiá `docs/github-actions-deploy.yml` a `.github/workflows/deploy.yml` (requiere un token con permiso `workflow`). Para servir en otra ruta: `BASE_PATH=/ npm run build`.
 
 ---
 
