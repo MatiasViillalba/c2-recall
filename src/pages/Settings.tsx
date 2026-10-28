@@ -1,6 +1,5 @@
 import { useEffect, useState, type ReactNode } from 'react';
-import { Link } from 'react-router-dom';
-import { ChevronLeft, Download, LogOut, Monitor, Moon, RefreshCw, Sun, Upload } from 'lucide-react';
+import { Download, LogOut, Monitor, Moon, RefreshCw, Sun, Upload } from 'lucide-react';
 import { useSettings, useSyncStatus } from '../lib/hooks';
 import { recomputeAllStates, saveSettings } from '../lib/repo';
 import { exportAll, restoreBackup } from '../lib/backup';
@@ -15,7 +14,7 @@ function Group({ title, note, children }: { title: string; note?: string; childr
   return (
     <section>
       <h2 className="mb-2 px-1 text-[12px] font-semibold uppercase tracking-[0.14em] text-muted">{title}</h2>
-      <div className="rounded-3xl border border-line bg-surface p-5 shadow-soft">{children}</div>
+      <div className="rounded-[26px] border border-line bg-surface/90 p-5 shadow-soft backdrop-blur-xl">{children}</div>
       {note && <p className="mt-2 px-1 text-[13px] leading-relaxed text-muted">{note}</p>}
     </section>
   );
@@ -27,13 +26,10 @@ export default function SettingsPage() {
 
   return (
     <div className="relative min-h-dvh">
-      <div className="ambient" aria-hidden />
-      <div className="relative mx-auto max-w-xl px-4 pb-16 pt-[calc(env(safe-area-inset-top)+14px)] sm:px-6 sm:pt-8">
-        <header className="mb-8 flex items-center gap-2">
-          <Link to="/" aria-label="Back to practice" className="-ml-2 flex h-10 w-10 items-center justify-center rounded-full text-ink-2 transition hover:bg-surface">
-            <ChevronLeft size={22} />
-          </Link>
-          <h1 className="font-display text-[26px] font-semibold text-ink">Settings</h1>
+      <div className="ambient" aria-hidden><span /><span /><span /></div>
+      <div className="relative mx-auto max-w-xl px-4 pb-tabs pt-[calc(env(safe-area-inset-top)+18px)] sm:px-6 sm:pt-10">
+        <header className="mb-8">
+          <h1 className="font-display text-[34px] font-semibold tracking-tight text-ink">Settings</h1>
         </header>
 
         <div className="space-y-8">
@@ -55,7 +51,14 @@ export default function SettingsPage() {
             </div>
           </Group>
 
-          <Group title="Spaced repetition" note="Higher retention means cards come back sooner and more often.">
+          <Group title="Daily study" note="Like Anki: reviews come back when they are due, and new cards are introduced up to your daily limit. Higher retention means cards return sooner and more often.">
+            <label className="mb-6 block">
+              <div className="mb-3 flex items-baseline justify-between text-sm">
+                <span className="font-medium text-ink">New cards per day</span>
+                <span className="tabular-nums text-ink-2">{s.newPerDay}</span>
+              </div>
+              <input type="range" min={0} max={100} step={5} value={s.newPerDay} onChange={(e) => void saveSettings({ newPerDay: Number(e.target.value) })} className="w-full" />
+            </label>
             <label className="block">
               <div className="mb-3 flex items-baseline justify-between text-sm">
                 <span className="font-medium text-ink">Target retention</span>

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-28T22:03:39.431Z",
-  "seedVersion": "3452a677c380",
+  "generatedAt": "2026-10-28T22:45:49.225Z",
+  "seedVersion": "8a518c87c2f1",
   "documents": [
     {
       "id": "banco",
@@ -44,14 +44,15 @@
     "capturasIdenticalToAnnexA": "153/153 imágenes idénticas byte a byte (comparación página por página)"
   },
   "sourceMentions": 1622,
-  "knowledgeItems": 713,
-  "mergedMentions": 909,
+  "knowledgeItems": 1182,
+  "mergedMentions": 440,
   "mergedDuplicateIds": 0,
-  "cards": 1521,
+  "cards": 2665,
   "cardsByType": {
     "es2en": 572,
     "cloze": 620,
     "kwt": 91,
+    "flash": 1144,
     "fix": 7,
     "pattern": 18,
     "contrast": 31,
@@ -59,9 +60,9 @@
     "wf": 180
   },
   "knowledgeByPart": {
-    "P4": 87,
-    "P2": 235,
-    "P1": 309,
+    "P4": 337,
+    "P2": 644,
+    "P1": 604,
     "P3": 130,
     "SPK": 19,
     "WRI": 13,
@@ -69,15 +70,15 @@
     "P6": 10
   },
   "knowledgeByCategory": {
-    "fixed_phrase": 44,
+    "fixed_phrase": 170,
     "expression": 19,
-    "prepositional_phrase": 59,
-    "verb_pattern": 50,
-    "idiom": 76,
-    "phrasal_verb": 66,
-    "collocation": 189,
+    "prepositional_phrase": 125,
+    "verb_pattern": 98,
+    "idiom": 196,
+    "phrasal_verb": 142,
+    "collocation": 336,
     "passive": 10,
-    "grammar_pattern": 32,
+    "grammar_pattern": 92,
     "reporting": 3,
     "causative": 3,
     "lexical_distinction": 26,
@@ -429,6 +430,30 @@
     {
       "file": "11-word-formation-practice.mjs",
       "items": 72
+    },
+    {
+      "file": "20-c2-idioms.mjs",
+      "items": 120
+    },
+    {
+      "file": "21-c2-collocations.mjs",
+      "items": 99
+    },
+    {
+      "file": "22-c2-phrasal-verbs.mjs",
+      "items": 76
+    },
+    {
+      "file": "23-c2-fixed-phrases.mjs",
+      "items": 66
+    },
+    {
+      "file": "24-c2-structures.mjs",
+      "items": 60
+    },
+    {
+      "file": "25-c2-dependent-prepositions.mjs",
+      "items": 48
     }
   ]
 }

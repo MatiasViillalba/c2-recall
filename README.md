@@ -3,21 +3,19 @@
 Tu Anki personal para **Cambridge C2 Proficiency**: tarjetas de recuperación activa con repetición espaciada **FSRS**, diseño premium, instalable como app (PWA) en el iPhone y en la notebook, que funciona **sin conexión** y sincroniza entre dispositivos con un plan **gratuito** de Supabase.
 
 - **App:** https://matiasviillalba.github.io/c2-recall/
-- **Banco inicial:** 711 tarjetas de frases y 180 de word formation, extraídas de tus tres PDF (ver [informe de cobertura](docs/COVERAGE.md)).
+- **Banco:** ~1.150 flashcards (tus tres PDF + contenido C2 nuevo); ver [informe de cobertura](docs/COVERAGE.md).
 - **Costo de mantenimiento:** US$0 (GitHub Pages + Supabase Free, sin tarjeta de crédito).
 
 ---
 
 ## Qué hace
 
-Una sola pantalla de práctica, en inglés y sin distracciones. Abrís la app y aparece una tarjeta; escribís en el hueco, la app corrige sola y tocás **Next**. Nada de calificar con Again/Good: la nota sale de tu respuesta (bien = Good, un error de tipeo = Hard, mal o «Show answer» = Again) y FSRS (`ts-fsrs`) programa la repetición espaciada por detrás. La práctica es ilimitada: primero lo vencido, después lo nuevo y, si estás al día, lo que vence antes.
+Flashcards estilo **Anki**, en inglés y sin distracciones. Cada tarjeta es un chunk, collocation, idiom, phrasal verb, fixed phrase, estructura de KWT, patrón, preposición dependiente o word formation **con una palabra faltante** y una pista breve en inglés. Lo pensás, tocás la tarjeta (o **Show answer**) y se da vuelta: el chunk completo con la palabra resaltada y una oración de ejemplo. Después calificás como en Anki: **Again / Hard / Good / Easy**, con el intervalo de cada botón arriba. FSRS (`ts-fsrs`) programa la repetición espaciada.
 
-| Modo | Qué ves | Reverso |
-| --- | --- | --- |
-| **Phrases** | Oración breve con un hueco para el chunk, collocation, phrasal verb, idiom, fixed phrase o estructura (Open Cloze, Multiple Choice y gramática). Los KWT muestran además la oración original y la keyword. | La oración completa con la respuesta resaltada. |
-| **Word formation** | Oración con un hueco y la raíz en mayúsculas (como en Part 3). | La oración completa con la palabra resaltada. |
-
-Los modos se alternan al azar (a veces seguidos, a veces mezclados). **Settings**: tema, retención objetivo, sincronización, copia de seguridad y mantenimiento.
+- **Cola como Anki:** primero lo que está en aprendizaje, después los repasos vencidos mezclados con las nuevas del día (límite configurable). Arriba se ven los contadores (nuevas · aprendiendo · repasos), y hay un botón para deshacer.
+- **Al terminar:** «All caught up!» y la opción **Learn 10 more** para seguir con nuevas.
+- **Dos pestañas:** Flashcards y Settings (tema, nuevas por día, retención, sincronización, copia de seguridad).
+- **Banco:** ~1.150 flashcards. Las ~670 de tus PDF más ~480 nuevas de nivel C2: idioms, collocations, phrasal verbs, fixed phrases, estructuras de KWT y preposiciones dependientes.
 
 ---
 
@@ -36,8 +34,8 @@ Los modos se alternan al azar (a veces seguidos, a veces mezclados). **Settings*
 
 > Las actualizaciones llegan solas: cuando hay una versión nueva, la app muestra «Hay una nueva versión» → **Actualizar**. Tus datos no se tocan.
 
-### Teclado
-`Enter` corrige y `Enter` otra vez pasa a la siguiente. En los huecos dobles («see … as»), `Enter` salta al segundo hueco.
+### Teclado (notebook)
+`Espacio`/`Enter` da vuelta la tarjeta (y después = Good) · `1`–`4` califican · `Z` deshace.
 
 ---
 
@@ -62,9 +60,15 @@ La app funciona completa sin esto (modo local, se indica como «Solo en este dis
 
 ---
 
-## Agregar contenido nuevo (mocks, ejercicios, clases)
+## Agregar contenido nuevo (clases, libro, mocks, ejercicios)
 
-La app ya no tiene pantalla de importación (para que quede simple). Para sumar contenido, pasale a Claude Code en esta carpeta tus capturas, PDF o correcciones: agrega los ítems en `content/seed-src/` (formato en [`docs/IMPORT_FORMAT.md`](docs/IMPORT_FORMAT.md)) y publica con `npm run deploy`. Al abrir la app, las tarjetas nuevas se suman solas, sin tocar tu historial.
+Abrí Claude Code en esta carpeta y pasale lo que estudiaste (texto, capturas, PDF, correcciones de un mock): por ejemplo *«agregá los chunks y collocations de este mock; fallé estos tres»*. Claude Code sigue las instrucciones de [`CLAUDE.md`](CLAUDE.md):
+
+1. Revisa que no estén repetidos en el banco.
+2. Escribe las flashcards nuevas en `content/seed-src/30-AAAA-MM-DD-<fuente>.mjs`. Lo que fallaste queda con prioridad alta.
+3. Compila, prueba, publica y sube los cambios a GitHub.
+
+En el iPhone y la notebook aparece «A new version is available» → **Update**, y las tarjetas nuevas se suman a tu cola sin tocar tu progreso.
 
 ---
 

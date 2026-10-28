@@ -8,7 +8,7 @@ import { useApplyTheme, useSettings } from './lib/hooks';
 import { ensureSeed } from './lib/seed';
 import { initSync, startAutoSync } from './lib/sync';
 import { db } from './lib/db';
-import Practice from './pages/Practice';
+import Flashcards from './pages/Flashcards';
 
 const SettingsPage = lazy(() => import('./pages/Settings'));
 
@@ -98,9 +98,9 @@ export default function App() {
             <Suspense fallback={<PageFallback />}>
               <Routes>
                 <Route element={<Layout />}>
-                  <Route index element={<Practice />} />
+                  <Route index element={<Flashcards />} />
                   <Route path="settings" element={<SettingsPage />} />
-                  <Route path="*" element={<Practice />} />
+                  <Route path="*" element={<Flashcards />} />
                 </Route>
               </Routes>
             </Suspense>

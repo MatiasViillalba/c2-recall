@@ -133,6 +133,7 @@ const CARD_TYPE_ALIASES: Record<string, CardType> = {
   pattern: 'pattern', grammar: 'pattern', rule: 'pattern',
   prod: 'prod', production: 'prod', translate: 'prod',
   fix: 'fix', correction: 'fix', error_fix: 'fix',
+  flash: 'flash', flashcard: 'flash',
 };
 
 /** Extrae los huecos {{…}} de una oración. */
@@ -178,8 +179,13 @@ export function normalizeItem(rawInput: RawItem, ctx: NormalizeContext): Normali
   const expression = asString(pick(raw, 't', 'expression', 'term', 'english')) ?? '';
   const id = asString(pick(raw, 'id', 'key')) ?? slugify(expression);
   const meaningEs = asString(pick(raw, 'es', 'meaningEs', 'meaning', 'spanish')) ?? '';
+  const meaningEn = asString(pick(raw, 'en', 'meaningEn', 'cue'));
+  /** Frente de la flashcard: el chunk con {{la palabra que falta}}. */
+  const flashFront = asString(pick(raw, 'f', 'front', 'flash'));
   if (!expression) issues.push({ level: 'error', itemId: id, message: 'Falta la expresión (t / expression).' });
-  if (!meaningEs) issues.push({ level: 'error', itemId: id, message: 'Falta el significado en español (es / meaningEs).' });
+  if (!meaningEs && !meaningEn) issues.push({ level: 'error', itemId: id, message: 'Falta el significado (en / es).' });
+  if (flashFront && !/\{\{.+?\}\}/.test(flashFront)) issues.push({ level: 'error', itemId: id, message: `El frente «${flashFront}» no marca la palabra que falta con {{…}}.` });
+  if (flashFront && !meaningEn) issues.push({ level: 'warning', itemId: id, message: 'Flashcard sin pista en inglés (en).' });
 
   const rawCats = asStringArray(pick(raw, 'cat', 'categories', 'category'));
   const categories = rawCats.filter((c): c is Category => (CATEGORIES as readonly string[]).includes(c));
@@ -209,6 +215,7 @@ export function normalizeItem(rawInput: RawItem, ctx: NormalizeContext): Normali
     id,
     expression,
     meaningEs,
+    meaningEn,
     promptEs: asString(pick(raw, 'qes', 'promptEs')),
     hint: asString(pick(raw, 'h', 'hint')),
     categories: Array.from(new Set(categories)),
@@ -241,8 +248,10 @@ export function normalizeItem(rawInput: RawItem, ctx: NormalizeContext): Normali
   const autoDisabledByCategory = categories.includes('word_formation') || categories.includes('strategy');
   // Un «X vs Y» se practica mejor con su tarjeta de contraste que con «¿Cómo se dice…?».
   const isContrastEntry = / vs\.? /i.test(expression);
+  // Los ítems nuevos (solo flashcard, sin español) no generan las tarjetas automáticas antiguas.
+  const flashOnly = !!flashFront && !meaningEs;
   const autoAllowed = (type: 'es2en' | 'cloze') =>
-    forceAuto || (!noauto.has(type) && !autoDisabledByCategory && !(type === 'es2en' && isContrastEntry));
+    !flashOnly && (forceAuto || (!noauto.has(type) && !autoDisabledByCategory && !(type === 'es2en' && isContrastEntry)));
   const base = { knowledgeId: id, alternatives: [] as string[], origin: ctx.origin, createdAt: ctx.now, updatedAt: ctx.now };
 
   if (autoAllowed('es2en')) {
@@ -274,7 +283,7 @@ export function normalizeItem(rawInput: RawItem, ctx: NormalizeContext): Normali
     });
   }
   // Word Formation: cada ejemplo con un único hueco de una palabra se practica también con la raíz.
-  if (categories.includes('word_formation') && knowledge.root && !noauto.has('wf')) {
+  if (!flashOnly && categories.includes('word_formation') && knowledge.root && !noauto.has('wf')) {
     clozeSources.forEach((src, i) => {
       const { prompt, answers, full } = parseCloze(src.en);
       if (answers.length !== 1 || /\s/.test(answers[0])) return;
@@ -338,6 +347,23 @@ export function normalizeItem(rawInput: RawItem, ctx: NormalizeContext): Normali
     }
   }
 
+  if (flashFront) {
+    const { prompt, answers } = parseCloze(flashFront);
+    // Reverso: la primera oración de ejemplo (con el chunk marcado) o, si no hay, la de una tarjeta del ítem.
+    const filled = cards.find((c) => c.prompt.includes(BLANK) && !c.answer.includes('…'));
+    const example = examples[0]?.en ?? (filled ? filled.prompt.replace(BLANK, `{{${filled.answer}}}`) : undefined);
+    cards.push({
+      ...base,
+      id: `${id}:flash`,
+      type: 'flash',
+      prompt,
+      answer: answers.join(' … '),
+      hint: meaningEn,
+      root: categories.includes('word_formation') ? knowledge.root?.toUpperCase() : undefined,
+      explanation: example,
+    });
+  }
+
   if (!cards.length) {
     issues.push({ level: 'warning', itemId: id, message: 'El conocimiento no generó ninguna tarjeta.' });
   }
@@ -363,7 +389,13 @@ export function validateCard(card: Card): Issue[] {
   if ((card.type === 'cloze' || card.type === 'wf' || card.type === 'kwt') && !card.prompt.includes(BLANK)) {
     push('warning', 'La pregunta no contiene el hueco «____».');
   }
-  if (card.type === 'cloze' || card.type === 'kwt' || card.type === 'wf') {
+  if (card.type === 'flash') {
+    if (!card.prompt.includes(BLANK)) push('error', 'Flashcard sin hueco «____».');
+    const words = card.answer.split(/\s*…\s*|\s+/).filter((w) => w.length > 3);
+    const inCue = words.filter((w) => card.hint && containsWord(card.hint, w));
+    if (inCue.length) push('warning', `La pista en inglés revela la respuesta: ${inCue.join(', ')}.`);
+  }
+  if (card.type === 'cloze' || card.type === 'kwt' || card.type === 'wf' || card.type === 'flash') {
     const leaked = card.answer.split(/\s*…\s*/).filter((a) => a.length > 3 && containsWord(card.prompt.replace(BLANK, ' '), a));
     if (leaked.length) push('warning', `La respuesta «${leaked.join(', ')}» ya aparece en el frente.`);
   }

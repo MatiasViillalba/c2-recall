@@ -1,91 +1,31 @@
-// Práctica continua: dos modos (frases y word formation) que se alternan al azar, con FSRS por detrás.
-// No hay calificación manual: la respuesta escrita se corrige sola y se registra como Again/Hard/Good.
-import { BLANK } from './content/normalize';
-import type { Grade } from './scheduler';
-import type { Card, CardState, Knowledge } from './types';
-import type { Library } from './queue';
+// Estudio estilo Anki con las flashcards (tipo «flash»): aprendizaje vencido primero, después repasos y
+// nuevas mezclados (con límite diario de nuevas) y, al final, lo que vence en los próximos 20 minutos.
+import type { Card, CardState, Knowledge, Settings } from './types';
+import type { Library, TodayStats } from './queue';
+import { endOfStudyDay } from './util';
 
-export type PracticeMode = 'phrase' | 'wf';
+export const LEARN_AHEAD_MS = 20 * 60_000;
 
-export function modeOf(card: Card): PracticeMode | null {
-  if (card.type === 'wf') return card.root ? 'wf' : null;
-  if (card.type === 'cloze' || card.type === 'kwt') return 'phrase';
-  return null;
+export function isFlashCard(card: Card, k: Knowledge | undefined): boolean {
+  return card.type === 'flash' && !card.suspended && !card.deleted && !!k && k.status !== 'archived';
 }
 
-/** Huecos y respuestas esperadas de una tarjeta («see … as» = dos huecos). */
-export function splitGaps(card: Card): { parts: string[]; answers: string[][] } | null {
-  const parts = card.prompt.split(BLANK);
-  const gaps = parts.length - 1;
-  if (gaps < 1) return null;
-  const split = (a: string) => a.split(/\s*…\s*/);
-  const main = split(card.answer);
-  if (main.length !== gaps) return null;
-  const answers = main.map((a) => [a]);
-  for (const alt of card.alternatives) {
-    const s = split(alt);
-    if (s.length === gaps) s.forEach((a, i) => answers[i].push(a));
-  }
-  return { parts, answers };
-}
+export type Tone = 'wf' | 'idiom' | 'phrasal' | 'pattern' | 'structure' | 'colloc' | 'fixed' | 'linker' | 'vocab';
 
-export function isPracticeCard(card: Card, k: Knowledge | undefined): boolean {
-  if (!k || card.suspended || card.deleted || k.status === 'archived') return false;
-  if (k.categories.includes('strategy')) return false;
-  return modeOf(card) !== null && splitGaps(card) !== null;
-}
+const GRAMMAR = new Set(['grammar_pattern', 'inversion', 'conditional', 'cleft', 'emphasis', 'passive', 'causative', 'relative_clause', 'comparative', 'reporting', 'tense', 'agreement', 'possessive']);
 
-// ── Corrección ──
-const CONTRACTIONS: [RegExp, string][] = [
-  [/\bwon't\b/g, 'will not'], [/\bcan't\b/g, 'cannot'], [/\bshan't\b/g, 'shall not'], [/n't\b/g, ' not'],
-  [/'re\b/g, ' are'], [/'ve\b/g, ' have'], [/'ll\b/g, ' will'], [/\bi'm\b/g, 'i am'],
-];
-
-export function normalizeAnswer(text: string): string {
-  let t = text.toLowerCase().normalize('NFKC').replace(/[‘’`´]/g, "'").replace(/[“”]/g, '"');
-  for (const [re, rep] of CONTRACTIONS) t = t.replace(re, rep);
-  return t.replace(/\bcan not\b/g, 'cannot').replace(/[.,;:!?"«»()]/g, ' ').replace(/\s+/g, ' ').trim();
-}
-
-function distance(a: string, b: string): number {
-  if (Math.abs(a.length - b.length) > 2) return 3;
-  const row = Array.from({ length: b.length + 1 }, (_, i) => i);
-  for (let i = 1; i <= a.length; i++) {
-    let prev = row[0];
-    row[0] = i;
-    for (let j = 1; j <= b.length; j++) {
-      const tmp = row[j];
-      row[j] = Math.min(row[j] + 1, row[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
-      prev = tmp;
-    }
-  }
-  return row[b.length];
-}
-
-export type GapResult = 'right' | 'close' | 'wrong';
-
-export function checkGap(input: string, accepted: string[]): GapResult {
-  const given = normalizeAnswer(input);
-  if (!given) return 'wrong';
-  const options = accepted.map(normalizeAnswer);
-  if (options.includes(given)) return 'right';
-  // Un error de tipeo en una palabra larga no es no saberla.
-  if (options.some((o) => o.length >= 6 && distance(given, o) <= 1)) return 'close';
-  return 'wrong';
-}
-
-export function gradeOf(results: GapResult[]): Grade {
-  if (results.every((r) => r === 'right')) return 3;
-  if (results.every((r) => r !== 'wrong')) return 2;
-  return 1;
-}
-
-// ── Selección ──
-export interface PracticeHistory {
-  /** Últimas tarjetas mostradas (más reciente al final). */
-  cards: string[];
-  knowledge: string[];
-  modes: PracticeMode[];
+/** Etiqueta y color de la tarjeta según la categoría principal del conocimiento. */
+export function categoryOf(k: Knowledge): { label: string; tone: Tone } {
+  const c = new Set<string>(k.categories);
+  if (c.has('word_formation')) return { label: 'Word formation', tone: 'wf' };
+  if (c.has('idiom')) return { label: 'Idiom', tone: 'idiom' };
+  if (c.has('phrasal_verb')) return { label: 'Phrasal verb', tone: 'phrasal' };
+  if (c.has('verb_pattern')) return { label: 'Pattern', tone: 'pattern' };
+  if ([...c].some((x) => GRAMMAR.has(x))) return { label: 'Structure', tone: 'structure' };
+  if (c.has('collocation')) return { label: 'Collocation', tone: 'colloc' };
+  if (c.has('fixed_phrase') || c.has('prepositional_phrase') || c.has('expression')) return { label: 'Fixed phrase', tone: 'fixed' };
+  if (c.has('linking')) return { label: 'Linker', tone: 'linker' };
+  return { label: 'Vocabulary', tone: 'vocab' };
 }
 
 function hash(str: string): number {
@@ -97,78 +37,92 @@ function hash(str: string): number {
   return h >>> 0;
 }
 
-/** Siguiente modo: a veces repite, a veces cambia; las rachas largas se cortan. */
-export function pickMode(history: PracticeMode[], available: Record<PracticeMode, boolean>, rand = Math.random): PracticeMode {
-  if (!available.wf) return 'phrase';
-  if (!available.phrase) return 'wf';
-  const last = history[history.length - 1];
-  if (!last) return rand() < 0.65 ? 'phrase' : 'wf';
-  let streak = 0;
-  for (let i = history.length - 1; i >= 0 && history[i] === last; i--) streak++;
-  const stay = last === 'phrase' ? (streak < 3 ? 0.62 : streak < 5 ? 0.35 : 0.1) : (streak < 2 ? 0.45 : streak < 3 ? 0.2 : 0.05);
-  if (rand() < stay) return last;
-  return last === 'phrase' ? 'wf' : 'phrase';
+export interface DeckSnapshot {
+  counts: { new: number; learning: number; review: number };
+  next: Card | null;
+  /** Próximo vencimiento de una tarjeta en aprendizaje (si hoy no queda nada más). */
+  nextLearningAt?: number;
+  /** Nuevas que todavía no se vieron nunca (para «Learn more»). */
+  unseen: number;
 }
 
-interface Candidate {
-  card: Card;
-  state?: CardState;
-  k: Knowledge;
+export interface DeckOptions {
+  now?: Date;
+  /** Nuevas extra pedidas hoy además del límite diario. */
+  extraNew?: number;
+  /** La tarjeta recién respondida no se repite enseguida si hay otra opción. */
+  lastCardId?: string;
+  rand?: () => number;
 }
 
-/**
- * Elige la próxima tarjeta de un modo: primero lo que está en aprendizaje y vencido, después repasos vencidos
- * (mezclados con alguna nueva para que no sea monótono), después nuevas y, si no queda nada, la que más se
- * está olvidando (práctica ilimitada).
- */
-export function pickCard(lib: Library, mode: PracticeMode, history: PracticeHistory, now = new Date(), rand = Math.random): Card | null {
-  const recentCards = new Set(history.cards.slice(-10));
-  const recentKnowledge = new Set(history.knowledge.slice(-14));
+export function deckSnapshot(lib: Library, settings: Settings, today: TodayStats, opts: DeckOptions = {}): DeckSnapshot {
+  const now = opts.now ?? new Date();
   const t = now.getTime();
-  const learning: Candidate[] = [];
-  const due: Candidate[] = [];
-  const fresh: Candidate[] = [];
-  const ahead: Candidate[] = [];
-  const fallback: Candidate[] = [];
+  const rand = opts.rand ?? Math.random;
+  const endOfDay = endOfStudyDay(now, settings.dayStartsAtHour).getTime();
+  const learning: { card: Card; due: number }[] = [];
+  const reviews: { card: Card; due: number; key: number }[] = [];
+  const fresh: { card: Card; k: Knowledge; key: number }[] = [];
 
   for (const card of lib.cards) {
     const k = lib.knowledge.get(card.knowledgeId);
-    if (modeOf(card) !== mode || !isPracticeCard(card, k)) continue;
-    const state = lib.states.get(card.id);
-    const c = { card, state, k: k! };
-    if (recentCards.has(card.id)) continue;
-    fallback.push(c);
-    if (recentKnowledge.has(k!.id)) continue;
-    if (!state || state.state === 0) fresh.push(c);
-    else if (new Date(state.due).getTime() > t) ahead.push(c);
-    else if (state.state === 1 || state.state === 3) learning.push(c);
-    else due.push(c);
+    if (!isFlashCard(card, k)) continue;
+    const state: CardState | undefined = lib.states.get(card.id);
+    if (!state || state.state === 0) {
+      if (k!.status !== 'mastered') fresh.push({ card, k: k!, key: hash(card.id + today.day) });
+      continue;
+    }
+    const due = new Date(state.due).getTime();
+    if (state.state === 1 || state.state === 3) {
+      if (due < endOfDay) learning.push({ card, due });
+    } else if (due < endOfDay) {
+      reviews.push({ card, due, key: hash(card.id + today.day) });
+    }
   }
 
-  const dueAt = (c: Candidate) => new Date(c.state!.due).getTime();
-  if (learning.length) return learning.sort((a, b) => dueAt(a) - dueAt(b))[0].card;
+  // Nuevas: primero los errores recurrentes; el resto en un orden mezclado distinto cada día.
+  fresh.sort((a, b) => b.k.priority - a.k.priority || b.k.timesMissed - a.k.timesMissed || a.key - b.key);
+  // Repasos: primero los de días anteriores; dentro del mismo día, mezclados.
+  reviews.sort((a, b) => Math.floor(a.due / 86_400_000) - Math.floor(b.due / 86_400_000) || a.key - b.key);
+  const newQueue = fresh.slice(0, Math.max(0, settings.newPerDay - today.newDone) + (opts.extraNew ?? 0));
+  const reviewQueue = reviews.slice(0, Math.max(0, settings.reviewsPerDay - today.reviewsDone));
+  learning.sort((a, b) => a.due - b.due);
 
-  const byNew = (a: Candidate, b: Candidate) =>
-    b.k.priority - a.k.priority || b.k.timesMissed - a.k.timesMissed || hash(a.card.id) - hash(b.card.id);
-  // Lo vencido hace más tiempo (en proporción a su intervalo) se olvida antes.
-  const overdue = (c: Candidate) => (t - dueAt(c)) / Math.max(1, c.state!.scheduledDays * 86_400_000) + c.k.priority * 0.05;
+  const counts = { new: newQueue.length, learning: learning.length, review: reviewQueue.length };
+  const skip = (c: Card) => c.id === opts.lastCardId;
+  const pickFrom = <T extends { card: Card }>(list: T[]) => list.find((x) => !skip(x.card))?.card;
 
-  if (due.length && (!fresh.length || rand() < 0.8)) return due.sort((a, b) => overdue(b) - overdue(a))[0].card;
-  if (fresh.length) {
-    // Entre las primeras nuevas, un poco de azar para no seguir siempre el mismo orden.
-    const top = fresh.sort(byNew).slice(0, 12);
-    return top[Math.floor(rand() * top.length)].card;
+  let next: Card | null | undefined = pickFrom(learning.filter((l) => l.due <= t));
+  if (!next) {
+    const r = pickFrom(reviewQueue);
+    const n = pickFrom(newQueue);
+    if (r && n) next = rand() < newQueue.length / (newQueue.length + reviewQueue.length) ? n : r;
+    else next = r ?? n;
   }
-  if (ahead.length) return ahead.sort((a, b) => dueAt(a) - dueAt(b))[0].card;
-  if (fallback.length) return fallback[Math.floor(rand() * fallback.length)].card;
-  return null;
+  next ??= pickFrom(learning.filter((l) => l.due <= t + LEARN_AHEAD_MS));
+  // Si lo único que queda es la tarjeta recién respondida, se vuelve a mostrar (como Anki).
+  next ??= learning.find((l) => l.due <= t + LEARN_AHEAD_MS)?.card ?? reviewQueue[0]?.card ?? newQueue[0]?.card ?? null;
+
+  return { counts, next, nextLearningAt: learning[0]?.due, unseen: fresh.length };
 }
 
-export function availableModes(lib: Library): Record<PracticeMode, boolean> {
-  const out: Record<PracticeMode, boolean> = { phrase: false, wf: false };
-  for (const card of lib.cards) {
-    const m = modeOf(card);
-    if (m && !out[m] && isPracticeCard(card, lib.knowledge.get(card.knowledgeId))) out[m] = true;
+/** Partes del frente separadas por el hueco y respuestas que van en cada uno. */
+export function splitFront(card: Card): { parts: string[]; answers: string[] } {
+  const parts = card.prompt.split('____');
+  const answers = card.answer.split(/\s*…\s*/);
+  return { parts, answers };
+}
+
+/** Separa una oración con marcas {{…}} en tramos normales y resaltados. */
+export function markedSegments(text: string): { text: string; mark: boolean }[] {
+  const out: { text: string; mark: boolean }[] = [];
+  const re = /\{\{(.+?)\}\}/g;
+  let last = 0;
+  for (let m = re.exec(text); m; m = re.exec(text)) {
+    if (m.index > last) out.push({ text: text.slice(last, m.index), mark: false });
+    out.push({ text: m[1], mark: true });
+    last = m.index + m[0].length;
   }
+  if (last < text.length) out.push({ text: text.slice(last), mark: false });
   return out;
 }

@@ -13,7 +13,7 @@ export const CATEGORIES = [
 ] as const;
 export type Category = (typeof CATEGORIES)[number];
 
-export const CARD_TYPES = ['es2en', 'cloze', 'contrast', 'kwt', 'wf', 'pattern', 'prod', 'fix'] as const;
+export const CARD_TYPES = ['es2en', 'cloze', 'contrast', 'kwt', 'wf', 'pattern', 'prod', 'fix', 'flash'] as const;
 export type CardType = (typeof CARD_TYPES)[number];
 
 /** error = error real · alt = alternativa válida rechazada por un autocorrector · register = variante de registro · unverified = no verificado */
@@ -54,6 +54,8 @@ export interface Knowledge {
   id: string;
   expression: string;
   meaningEs: string;
+  /** Pista breve en inglés que acompaña a la flashcard. */
+  meaningEn?: string;
   /** Texto en español para la tarjeta «¿Cómo se dice…?» si difiere de meaningEs. */
   promptEs?: string;
   hint?: string;

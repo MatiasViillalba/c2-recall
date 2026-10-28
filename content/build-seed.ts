@@ -35,6 +35,18 @@ function resolveSource(raw: unknown): SourceRef[] {
 
 interface FileModule { default: RawItem[]; defaults?: Partial<RawItem> }
 
+// Flashcards del banco original: id → [frente con {{palabra}}, pista en inglés] (content/flashcards/*.mjs).
+const overlayDir = join(here, 'flashcards');
+const overlay = new Map<string, [string, string]>();
+for (const file of readdirSync(overlayDir).filter((f) => f.endsWith('.mjs')).sort()) {
+  const mod = (await import(pathToFileURL(join(overlayDir, file)).href)) as { default: Record<string, [string, string]> };
+  for (const [id, value] of Object.entries(mod.default)) {
+    if (overlay.has(id)) throw new Error(`[flashcards/${file}] id repetido: ${id}`);
+    overlay.set(id, value);
+  }
+}
+const overlayUsed = new Set<string>();
+
 const srcDir = join(here, 'seed-src');
 const files = readdirSync(srcDir).filter((f) => f.endsWith('.mjs')).sort();
 const knowledgeById = new Map<string, Knowledge>();
@@ -47,16 +59,25 @@ let rawMentions = 0;
 for (const file of files) {
   const mod = (await import(pathToFileURL(join(srcDir, file)).href)) as FileModule;
   fileStats.push({ file, items: mod.default.length });
-  for (const raw of mod.default) {
-    const { knowledge, cards, issues: itemIssues } = normalizeItem(raw, {
-      now: SEED_TIME,
-      origin: 'seed',
-      resolveSource,
-      defaults: mod.defaults,
-    });
+  for (const rawItem of mod.default) {
+    const ctx = { now: SEED_TIME, origin: 'seed' as const, resolveSource, defaults: mod.defaults };
+    let raw = rawItem;
+    let normalized = normalizeItem(raw, ctx);
+    const extra = overlay.get(normalized.knowledge.id);
+    if (extra && !raw.f) {
+      overlayUsed.add(normalized.knowledge.id);
+      raw = { ...raw, f: extra[0], en: extra[1] };
+      normalized = normalizeItem(raw, ctx);
+    }
+    const { knowledge, cards, issues: itemIssues } = normalized;
     issues.push(...itemIssues.map((i) => ({ ...i, message: `[${file}] ${i.message}` })));
     rawMentions += knowledge.sources.filter((s) => s.sourceId !== 'capturas').length;
     const existing = knowledgeById.get(knowledge.id);
+    if (existing && raw.f && !extra) {
+      // Una flashcard nueva no puede pisar un conocimiento que ya existe: hay que editar el existente.
+      issues.push({ level: 'error', itemId: knowledge.id, message: `[${file}] ya existe un conocimiento con este id; agregá la información al existente en lugar de duplicarlo.` });
+      continue;
+    }
     if (existing) {
       // Mismo conocimiento definido dos veces: se fusiona sin perder fuentes ni tarjetas.
       mergedDuplicateIds++;
@@ -74,6 +95,10 @@ for (const file of files) {
       cardsById.set(c.id, c);
     }
   }
+}
+
+for (const id of overlay.keys()) {
+  if (!overlayUsed.has(id)) issues.push({ level: 'error', itemId: id, message: 'content/flashcards: el id no corresponde a ningún conocimiento.' });
 }
 
 // Fuentes únicas por conocimiento (sin repetir página/documento).

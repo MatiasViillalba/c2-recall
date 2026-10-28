@@ -34,29 +34,23 @@ export function addDays(day: string, delta: number): string {
   return `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}-${String(dt.getDate()).padStart(2, '0')}`;
 }
 
+/** Intervalo corto al estilo Anki: <1m · 10m · 5h · 3d · 2.1mo · 1.4y. */
 export function formatInterval(ms: number): string {
   const min = ms / 60000;
-  if (min < 1) return '<1 min';
-  if (min < 60) return `${Math.round(min)} min`;
+  if (min < 1) return '<1m';
+  if (min < 60) return `${Math.round(min)}m`;
   const h = min / 60;
-  if (h < 24) return `${Math.round(h)} h`;
+  if (h < 24) return `${Math.round(h)}h`;
   const d = h / 24;
-  if (d < 31) return `${Math.round(d)} d`;
+  if (d < 31) return `${Math.round(d)}d`;
   const mo = d / 30.44;
-  if (mo < 12) return `${mo < 10 ? mo.toFixed(1).replace('.0', '') : Math.round(mo)} m`;
-  return `${(d / 365.25).toFixed(1).replace('.0', '')} a`;
-}
-
-export function relativeDue(due: string | undefined, now = new Date()): string {
-  if (!due) return 'nueva';
-  const ms = new Date(due).getTime() - now.getTime();
-  if (ms <= 0) return 'vencida';
-  return `en ${formatInterval(ms)}`;
+  if (mo < 12) return `${mo < 10 ? mo.toFixed(1).replace('.0', '') : Math.round(mo)}mo`;
+  return `${(d / 365.25).toFixed(1).replace('.0', '')}y`;
 }
 
 export function formatDate(iso: string | undefined, opts: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' }): string {
   if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('es-AR', opts);
+  return new Date(iso).toLocaleDateString('en-GB', opts);
 }
 
 export function pluralize(n: number, one: string, many: string): string {

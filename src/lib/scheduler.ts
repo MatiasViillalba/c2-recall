@@ -10,7 +10,7 @@ import { formatInterval } from './util';
 
 export const DEFAULT_SETTINGS: Settings = {
   id: 'settings',
-  newPerDay: 15,
+  newPerDay: 20,
   reviewsPerDay: 250,
   retention: 0.9,
   maximumInterval: 3650,
