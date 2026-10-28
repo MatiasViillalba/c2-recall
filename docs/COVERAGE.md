@@ -1,6 +1,6 @@
 # Informe de cobertura de los tres PDF
 
-> Generado automáticamente por `npm run seed` (banco 8a518c87c2f1). Cada página de los tres documentos está **referenciada por al menos un conocimiento** o **documentada con el motivo** por el que no aporta tarjetas. El script falla el informe si alguna página queda sin contabilizar.
+> Generado automáticamente por `npm run seed` (banco 4468aaa1fabb). Cada página de los tres documentos está **referenciada por al menos un conocimiento** o **documentada con el motivo** por el que no aporta tarjetas. El script falla el informe si alguna página queda sin contabilizar.
 
 ## Resumen
 
@@ -12,7 +12,7 @@
 | Menciones de conocimientos en las fuentes | 1622 |
 | Conocimientos únicos (tras fusionar duplicados) | 1182 |
 | Menciones duplicadas fusionadas | 440 |
-| Tarjetas generadas | 2665 |
+| Tarjetas generadas | 2653 |
 | Validación automática | 0 errores · 6 advertencias (cognados ES/EN, revisados) |
 
 ## Documentos
@@ -31,7 +31,7 @@
 
 | Tipo | Tarjetas |
 | --- | --- |
-| flash | 1144 |
+| flash | 1132 |
 | cloze | 620 |
 | es2en | 572 |
 | wf | 180 |

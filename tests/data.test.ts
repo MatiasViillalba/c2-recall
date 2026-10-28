@@ -30,6 +30,16 @@ describe('banco inicial (seed)', () => {
     }
   });
 
+  it('una flashcard retirada del banco deja de aparecer, sin borrar su historial', async () => {
+    const seed = loadSeed();
+    const card = seed.cards.find((c) => c.type === 'flash')!;
+    await recordReview({ card, rating: 3, durationMs: 1000 });
+    await installSeed({ ...seed, seedVersion: 'next', cards: seed.cards.filter((c) => c.id !== card.id) });
+    expect((await db.cards.get(card.id))!.deleted).toBe(true);
+    expect((await loadLibrary()).cards.some((c) => c.id === card.id)).toBe(false);
+    expect(await db.reviews.where('cardId').equals(card.id).count()).toBe(1);
+  });
+
   it('reinstalar la misma versión no hace nada', async () => {
     const r = await installSeed(loadSeed());
     expect(r.installed).toBe(false);

@@ -66,7 +66,7 @@ export default [
   card('a {{daunting}} task', 'a job that seems frighteningly difficult', 'Writing a thesis is {{a daunting task}}.'),
   card('a {{marked}} improvement', 'a clear, noticeable improvement', 'There has been {{a marked improvement}} in his grades.'),
   card('a {{tentative}} agreement', 'an agreement that is not yet final', 'The parties reached {{a tentative agreement}}.'),
-  card('{{sheer}} luck', 'pure luck', 'We won through {{sheer luck}}.'),
+  card('{{sheer}} luck', 'nothing but luck', 'We won through {{sheer luck}}.'),
   card('a {{hollow}} victory', 'a win with no real value', 'Without the fans, it felt like {{a hollow victory}}.'),
   card('pay {{scant}} attention to', 'pay very little attention to', 'The report {{pays scant attention to}} costs.'),
   card('an {{acquired}} taste', 'something you learn to like over time', 'Olives are {{an acquired taste}}.'),

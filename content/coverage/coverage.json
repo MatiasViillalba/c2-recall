@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-28T22:45:49.225Z",
-  "seedVersion": "8a518c87c2f1",
+  "generatedAt": "2026-10-28T23:11:11.468Z",
+  "seedVersion": "4468aaa1fabb",
   "documents": [
     {
       "id": "banco",
@@ -47,12 +47,12 @@
   "knowledgeItems": 1182,
   "mergedMentions": 440,
   "mergedDuplicateIds": 0,
-  "cards": 2665,
+  "cards": 2653,
   "cardsByType": {
     "es2en": 572,
     "cloze": 620,
     "kwt": 91,
-    "flash": 1144,
+    "flash": 1132,
     "fix": 7,
     "pattern": 18,
     "contrast": 31,

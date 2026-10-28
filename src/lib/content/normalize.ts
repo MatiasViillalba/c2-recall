@@ -349,6 +349,17 @@ export function normalizeItem(rawInput: RawItem, ctx: NormalizeContext): Normali
 
   if (flashFront) {
     const { prompt, answers } = parseCloze(flashFront);
+    // La palabra oculta tiene que ser parte fija del chunk (en su forma de diccionario), no un hueco libre de un
+    // ejercicio («have the whole room ____» → laughing, crying, cheering…). Word Formation se exceptúa: la
+    // respuesta es la forma derivada de la raíz.
+    if (!categories.includes('word_formation')) {
+      const words = (text: string) => text.toLowerCase().replace(/[’]/g, "'").replace(/[^a-z' -]/g, ' ').split(/[\s-]+/).filter(Boolean);
+      const fixed = new Set(words(expression));
+      const loose = answers.flatMap(words).filter((w) => !fixed.has(w));
+      if (loose.length) {
+        issues.push({ level: 'error', itemId: id, message: `Flashcard: «${loose.join(' ')}» no es parte fija de «${expression}». Ocultá una palabra fija del chunk en su forma de diccionario, nunca un hueco libre de un ejercicio.` });
+      }
+    }
     // Reverso: la primera oración de ejemplo (con el chunk marcado) o, si no hay, la de una tarjeta del ítem.
     const filled = cards.find((c) => c.prompt.includes(BLANK) && !c.answer.includes('…'));
     const example = examples[0]?.en ?? (filled ? filled.prompt.replace(BLANK, `{{${filled.answer}}}`) : undefined);

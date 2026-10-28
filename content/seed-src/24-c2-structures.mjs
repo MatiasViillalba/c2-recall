@@ -37,7 +37,7 @@ export default [
   card('be {{tantamount}} to', 'be equivalent to (something bad)', 'His silence {{was tantamount to}} a confession.'),
   card('as {{far}} as I\'m concerned', 'in my opinion', '{{As far as I\'m concerned}}, the matter is closed.'),
   card('Little did I {{know}} that …', 'I had no idea that (inversion)', '{{Little did I know}} that she was watching.'),
-  card('Such was his {{anger}} that …', 'he was so furious that (inversion)', '{{Such was his anger that}} he couldn\'t speak.'),
+  card('{{Such}} was his anger that …', 'he was so furious that (inversion)', '{{Such was his anger that}} he couldn\'t speak.'),
   card('Only {{then}} did I realise …', 'at that moment and not before (inversion)', '{{Only then did I realise}} my mistake.'),
   card('Not {{once}} did he …', 'he never, not even one time (inversion)', '{{Not once did he}} apologise.'),
   card('In no {{way}} is this …', 'not at all (inversion)', '{{In no way is this}} your fault.'),

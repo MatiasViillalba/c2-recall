@@ -66,4 +66,23 @@ describe('utilidades', () => {
     expect(normalizeExpression('Talk someone out of')).toBe(normalizeExpression('talk sb out of'));
     expect(normalizeExpression('Work like magic.')).toBe('work like magic');
   });
+
+  it('genera la flashcard desde el frente con {{palabra}}, la pista y el ejemplo', () => {
+    const { cards, issues } = normalizeItem({
+      t: 'lend weight to', f: 'lend {{weight}} to an argument', en: 'make it more convincing', cat: ['collocation'],
+      ex: ['The data {{lend weight to}} the theory.'],
+    }, ctx);
+    expect(issues.filter((i) => i.level === 'error')).toHaveLength(0);
+    expect(cards.map((c) => c.type)).toEqual(['flash']);
+    expect(cards[0]).toMatchObject({ prompt: 'lend ____ to an argument', answer: 'weight', hint: 'make it more convincing', explanation: 'The data {{lend weight to}} the theory.' });
+  });
+
+  it('rechaza una flashcard que oculta un hueco libre de un ejercicio en vez de una palabra fija del chunk', () => {
+    const { issues } = normalizeItem({
+      t: 'have someone doing something', f: 'have the whole room {{laughing}}', en: 'cause a reaction', cat: ['verb_pattern'],
+    }, ctx);
+    expect(issues.some((i) => i.level === 'error' && /laughing/.test(i.message))).toBe(true);
+    const ok = normalizeItem({ t: 'have someone doing something', f: '{{have}} someone doing something', en: 'cause a reaction', cat: ['verb_pattern'] }, ctx);
+    expect(ok.issues.filter((i) => i.level === 'error')).toHaveLength(0);
+  });
 });

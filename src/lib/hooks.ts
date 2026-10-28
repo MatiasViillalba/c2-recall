@@ -47,7 +47,7 @@ export function useApplyTheme(theme: Settings['theme']) {
     const dark = theme === 'dark' || (theme === 'system' && prefersDark);
     document.documentElement.dataset.theme = dark ? 'dark' : 'light';
     try { localStorage.setItem('c2r-theme', theme); } catch { /* sin almacenamiento */ }
-    const meta = document.querySelectorAll('meta[name="theme-color"]');
-    meta.forEach((m) => m.setAttribute('content', dark ? '#10131b' : '#f7f5f0'));
+    // La barra de estado queda siempre negra, con tema claro u oscuro.
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => m.setAttribute('content', '#000000'));
   }, [theme, prefersDark]);
 }

@@ -44,8 +44,13 @@ to add it. For each chunk / collocation / idiom / phrasal verb / structure worth
    `grammar_pattern` (+ `inversion`, `cleft`, `conditional`…), `verb_pattern`, `linking`, `vocabulary`,
    `word_formation` (pass the root as `extra`: `wf('make an {{educated}} guess', 'a guess based on some knowledge', '…', { root: 'EDUCATE' })`).
 3. **Card rules**
-   - Front: exactly one `{{…}}`; choose the word that is hard to recall (the tested word in Open Cloze / KWT,
-     the collocating verb/adjective, the particle of a phrasal verb). Keep the chunk short, no full sentences.
+   - Front = the chunk itself in **dictionary form** (`take issue with`, `it's high time + subject + past simple`),
+     never a sentence or fragment copied from an exercise (`have the whole room laughing`, `the alarm went off`).
+   - Hide exactly one **fixed** word of the chunk with `{{…}}`: the tested word in Open Cloze / KWT, the collocating
+     verb/adjective, the particle of a phrasal verb, the fixed word of a structure (`Not {{only}} …, but also …`).
+     Never hide a free slot that many words could fill (a verb in `have someone ___ing`, an auxiliary that depends
+     on tense, an example noun). The build fails if the hidden word is not part of the chunk (`t`).
+   - Leave out things that are not chunks (pure grammar rules, spelling, exam strategies).
    - Cue: short English definition (2–8 words). It must **never contain the missing word** (the build warns).
    - Example: one natural C2 sentence with the whole chunk marked `{{…}}`. British spelling.
    - Correct English only; if you are not sure an item is right, say so instead of adding it.

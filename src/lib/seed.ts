@@ -90,6 +90,11 @@ export async function installSeed(seed: SeedFile, opts: { force?: boolean } = {}
       result.cardsUpdated++;
     });
     await db.cards.bulkPut(toPutC);
+    // Flashcards que el banco retiró (p. ej. por no ser un chunk): dejan de aparecer; su historial queda.
+    const seedIds = new Set(seed.cards.map((c) => c.id));
+    const retired = (await db.cards.where('type').equals('flash').toArray())
+      .filter((c) => c.origin === 'seed' && !c.deleted && !c.userEdited && !seedIds.has(c.id));
+    await db.cards.bulkPut(retired.map((c) => ({ ...c, deleted: true })));
     // Solo se crea estado para tarjetas nuevas: el estado de las existentes nunca se toca.
     const haveState = new Set(await db.cardStates.where('cardId').anyOf(newStates.map((s) => s.cardId)).primaryKeys());
     await db.cardStates.bulkPut(newStates.filter((s) => !haveState.has(s.cardId)));
