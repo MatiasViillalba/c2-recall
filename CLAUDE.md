@@ -6,6 +6,10 @@ https://matiasviillalba.github.io/c2-recall/ (installed on his iPhone and laptop
 
 Talk to Matías in Spanish (Rioplatense). Everything inside the app must be in **English**.
 
+The GitHub repo must stay **public**: it is on a free plan, and GitHub Pages stops serving private repos (the
+site returns 404 and Pages gets disabled). If that happens, ask him to make it public and re-enable Pages with
+`gh api -X POST repos/MatiasViillalba/c2-recall/pages -f "source[branch]=gh-pages" -f "source[path]=/"`.
+
 ## What the app is (keep it this way)
 
 - Two tabs only: **Flashcards** and **Settings**. No library, stats, decks, import screens, audio or extras.
