@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>C2 Recall</title>
+    <meta name="description" content="Cambridge C2 Proficiency flashcards with spaced repetition." />
+    <!-- Barra de estado del iPhone (hora, batería) negra con texto blanco, como en cualquier app. -->
+    <meta name="theme-color" content="#000000" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="C2 Recall" />
+    <link rel="icon" href="/c2-recall/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/c2-recall/apple-touch-icon.png" />
+    <script>
+      // Aplica el tema antes de pintar para evitar parpadeos.
+      try {
+        var t = localStorage.getItem('c2r-theme') || 'system';
+        var dark = t === 'dark' || (t === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        document.documentElement.dataset.theme = dark ? 'dark' : 'light';
+      } catch (e) {}
+    </script>
+    <script type="module" crossorigin src="/c2-recall/assets/index-CF_wOmV7.js"></script>
+    <link rel="stylesheet" crossorigin href="/c2-recall/assets/index-D3k3GbsM.css">
+  <link rel="manifest" href="/c2-recall/manifest.webmanifest"></head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
