@@ -38,7 +38,7 @@ export default [
   card('take something with a pinch of {{salt}}', 'not completely believe it', 'I\'d {{take his promises with a pinch of salt}}.'),
   card('the {{ball}} is in your court', 'it is your turn to decide or act', 'I\'ve made my offer, so {{the ball is in your court}}.'),
   card('throw in the {{towel}}', 'give up', 'After three failed attempts, he {{threw in the towel}}.'),
-  card('under the {{weather}}', 'slightly ill', 'I\'m feeling a bit {{under the weather}} today.'),
+  card('under the {{weather}}', 'slightly ill', 'I\'m feeling a bit {{under the weather}} today.', { src: 'Banco KWT', prio: 3 }),
   card('a storm in a {{teacup}}', 'a lot of fuss about something unimportant', 'The whole scandal was {{a storm in a teacup}}.'),
   card('add {{insult}} to injury', 'make a bad situation even worse', 'To {{add insult to injury}}, they charged us for the delay.'),
   card('burn the midnight {{oil}}', 'work late into the night', 'She\'s been {{burning the midnight oil}} before her finals.'),

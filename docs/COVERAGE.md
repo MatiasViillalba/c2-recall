@@ -1,6 +1,6 @@
 # Informe de cobertura de los tres PDF
 
-> Generado automáticamente por `npm run seed` (banco 4468aaa1fabb). Cada página de los tres documentos está **referenciada por al menos un conocimiento** o **documentada con el motivo** por el que no aporta tarjetas. El script falla el informe si alguna página queda sin contabilizar.
+> Generado automáticamente por `npm run seed` (banco e1f2aabbb819). Cada página de los tres documentos está **referenciada por al menos un conocimiento** o **documentada con el motivo** por el que no aporta tarjetas. El script falla el informe si alguna página queda sin contabilizar.
 
 ## Resumen
 
@@ -10,9 +10,9 @@
 | Páginas procesadas | 451 de 451 (0 sin contabilizar) |
 | Imágenes revisadas visualmente | 191 (153 del Anexo A + 38 del Anexo B) |
 | Menciones de conocimientos en las fuentes | 1622 |
-| Conocimientos únicos (tras fusionar duplicados) | 1182 |
-| Menciones duplicadas fusionadas | 440 |
-| Tarjetas generadas | 2653 |
+| Conocimientos únicos (tras fusionar duplicados) | 1195 |
+| Menciones duplicadas fusionadas | 427 |
+| Tarjetas generadas | 2666 |
 | Validación automática | 0 errores · 6 advertencias (cognados ES/EN, revisados) |
 
 ## Documentos
@@ -31,7 +31,7 @@
 
 | Tipo | Tarjetas |
 | --- | --- |
-| flash | 1132 |
+| flash | 1145 |
 | cloze | 620 |
 | es2en | 572 |
 | wf | 180 |
@@ -45,10 +45,10 @@
 
 | Parte | Conocimientos |
 | --- | --- |
-| P2 | 644 |
-| P1 | 604 |
-| P4 | 337 |
-| P3 | 130 |
+| P2 | 645 |
+| P1 | 605 |
+| P4 | 340 |
+| P3 | 140 |
 | SPK | 19 |
 | WRI | 13 |
 | P6 | 10 |
@@ -59,23 +59,23 @@
 | Categoría | Conocimientos |
 | --- | --- |
 | collocation | 336 |
-| idiom | 196 |
+| idiom | 197 |
 | fixed_phrase | 170 |
 | phrasal_verb | 142 |
+| word_formation | 135 |
 | prepositional_phrase | 125 |
-| word_formation | 125 |
 | verb_pattern | 98 |
 | grammar_pattern | 92 |
 | vocabulary | 66 |
-| linking | 34 |
+| linking | 35 |
 | lexical_distinction | 26 |
 | expression | 19 |
-| inversion | 15 |
+| inversion | 16 |
 | academic | 13 |
 | comparative | 12 |
+| conditional | 11 |
 | passive | 10 |
 | emphasis | 10 |
-| conditional | 9 |
 | relative_clause | 8 |
 | spelling | 8 |
 | tense | 7 |

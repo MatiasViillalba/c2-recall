@@ -45,7 +45,7 @@ export default [
   card('no {{matter}} how', 'however; regardless of how', '{{No matter how}} hard I try, I can\'t do it.'),
   card('I\'d {{rather}} you didn\'t', 'I would prefer you not to', '{{I\'d rather you didn\'t}} smoke in here.'),
   card('but {{for}} + noun', 'if it had not been for', '{{But for}} your help, we would have failed.'),
-  card('on {{condition}} that', 'only if', 'You can go {{on condition that}} you\'re back by ten.'),
+  card('on {{condition}} that', 'only if', 'You can go {{on condition that}} you\'re back by ten.', { src: 'Banco KWT', prio: 3 }),
   card('{{lest}} we forget', 'so that we do not forget', 'The monument stands {{lest we forget}}.'),
   card('for all I {{care}}', 'it doesn\'t matter to me at all', 'He can leave {{for all I care}}.'),
   card('come {{close}} to + -ing', 'almost do something', 'I {{came close to}} giving up.'),

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-28T23:11:11.468Z",
-  "seedVersion": "4468aaa1fabb",
+  "generatedAt": "2026-10-29T14:06:13.133Z",
+  "seedVersion": "e1f2aabbb819",
   "documents": [
     {
       "id": "banco",
@@ -44,15 +44,15 @@
     "capturasIdenticalToAnnexA": "153/153 imágenes idénticas byte a byte (comparación página por página)"
   },
   "sourceMentions": 1622,
-  "knowledgeItems": 1182,
-  "mergedMentions": 440,
+  "knowledgeItems": 1195,
+  "mergedMentions": 427,
   "mergedDuplicateIds": 0,
-  "cards": 2653,
+  "cards": 2666,
   "cardsByType": {
     "es2en": 572,
     "cloze": 620,
     "kwt": 91,
-    "flash": 1132,
+    "flash": 1145,
     "fix": 7,
     "pattern": 18,
     "contrast": 31,
@@ -60,10 +60,10 @@
     "wf": 180
   },
   "knowledgeByPart": {
-    "P4": 337,
-    "P2": 644,
-    "P1": 604,
-    "P3": 130,
+    "P4": 340,
+    "P2": 645,
+    "P1": 605,
+    "P3": 140,
     "SPK": 19,
     "WRI": 13,
     "P5": 6,
@@ -74,7 +74,7 @@
     "expression": 19,
     "prepositional_phrase": 125,
     "verb_pattern": 98,
-    "idiom": 196,
+    "idiom": 197,
     "phrasal_verb": 142,
     "collocation": 336,
     "passive": 10,
@@ -82,10 +82,10 @@
     "reporting": 3,
     "causative": 3,
     "lexical_distinction": 26,
-    "conditional": 9,
-    "linking": 34,
+    "conditional": 11,
+    "linking": 35,
     "comparative": 12,
-    "inversion": 15,
+    "inversion": 16,
     "relative_clause": 8,
     "cleft": 4,
     "emphasis": 10,
@@ -94,7 +94,7 @@
     "tense": 7,
     "false_friend": 6,
     "academic": 13,
-    "word_formation": 125,
+    "word_formation": 135,
     "spelling": 8,
     "strategy": 7,
     "agreement": 2
@@ -454,6 +454,10 @@
     {
       "file": "25-c2-dependent-prepositions.mjs",
       "items": 48
+    },
+    {
+      "file": "30-2026-10-29-banco-kwt.mjs",
+      "items": 13
     }
   ]
 }
